@@ -130,11 +130,12 @@ metro = {
 }
 
 -- --------------------------------------------------------- misc stubs ----
+local saved_tabs
 util = {
   clamp = function(x, lo, hi) return math.min(math.max(x, lo), hi) end,
-  file_exists = function() return false end,
+  file_exists = function(p) return saved_tabs[p] ~= nil end,
 }
-local saved_tabs = {}
+saved_tabs = {}
 tab = {
   save = function(t, path) saved_tabs[path] = t end,
   load = function(path) return saved_tabs[path] end,
@@ -208,7 +209,7 @@ end
 math.randomseed(1)
 dofile(root .. "/lp3seq/lp3seq.lua")
 
-local lcg = 12345
+local lcg = tonumber(os.getenv("SEED")) or 12345
 local function rnd(n)
   lcg = (lcg * 1103515245 + 12345) % 2147483648
   return (lcg % n) + 1
@@ -258,6 +259,38 @@ local function setup_features()
   tap(2, 7); tap(5, 8)
   try("key", key, 2, 1); try("key", key, 2, 0)
   tap(6, 9)                                   -- back to Drums
+
+  -- step edit: select a step, toggle accent / manual, adjust, deselect
+  tap(2, 8)
+  try("key", key, 3, 1); try("key", key, 3, 0)
+  try("key", key, 2, 1); try("key", key, 2, 0)
+  try("enc", enc, 2, 10); try("enc", enc, 3, 5)
+  tap(2, 8)
+
+  -- mute (shift = hold transport): latched, then momentary; tempo page
+  try("key", fakepad.key, 9, 1, 1)
+  tap(9, 6)
+  try("key", fakepad.key, 9, 4, 1); advance(0.5); try("key", fakepad.key, 9, 4, 0)
+  try("enc", enc, 2, 7)
+  try("key", fakepad.key, 9, 1, 0)
+
+  -- every arp style and phrase type, with time to play through them
+  tap(7, 9)
+  for x = 1, 8 do tap(x, 2); advance(1.5) end
+  for x = 1, 8 do tap(x, 1); advance(1.5) end
+  tap(6, 9)
+
+  -- Session: copy a pattern (long press arms copy mode, next tap pastes)
+  tap(5, 9)
+  try("key", fakepad.key, 1, 6, 1); advance(0.9); try("key", fakepad.key, 1, 6, 0)
+  tap(4, 6)
+
+  -- pset save + load round trip
+  try("pset", function()
+    params.action_write("x", "n", 1)
+    params.action_read("x", "n", 1)
+  end)
+  tap(6, 9)
 end
 
 for e = 1, n_events do
