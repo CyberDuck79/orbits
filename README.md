@@ -32,7 +32,7 @@ The Launchpad is where you play; the norns screen and encoders hold the fine adj
   ```
 
   Then enable **LP3** in **SYSTEM > MODS** and restart the norns.
-- At least one [nb](https://github.com/sixolet/nb) voice (a synth engine mod, or a MIDI port). See [Voices and MIDI](#voices-and-midi).
+- A sound source for each track: an external instrument on a MIDI port is enough, nothing else to install. If you want internal synths, install [nb](https://github.com/sixolet/nb) voice mods too. See [Voices and MIDI](#voices-and-midi).
 
 Install lp3seq itself by cloning this repository into the norns' script folder, so that the script ends up in `~/dust/code/lp3seq`:
 
@@ -282,7 +282,10 @@ What is not saved: the current page, the selected track and mutes.
 
 ## Voices and MIDI
 
-Each track sends its notes to an [nb](https://github.com/sixolet/nb) voice, chosen in **PARAMETERS** with **T1 OUTPUT … T7 OUTPUT**. Any nb voice works: synth engines installed as nb mods, or an external instrument. Every connected MIDI port appears as a voice, named `midi: <port> <n>`, with its channel, modulation CC and bend range in the parameters.
+Each track sends its notes to a voice, chosen in **PARAMETERS** with **T1 OUTPUT … T7 OUTPUT**. The voice system is [nb](https://github.com/sixolet/nb), and lp3seq bundles it: you do not need to install it.
+
+- **MIDI**: every connected MIDI port appears as a voice, named `midi: <port> <n>`, with its channel, modulation CC and bend range in the parameters. This works out of the box.
+- **Internal synths**: any [nb](https://github.com/sixolet/nb) voice mod you have installed shows up in the same list.
 
 The script only sends note on / note off with a velocity. Notes are short gates.
 
