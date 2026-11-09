@@ -79,6 +79,9 @@ local function param_idx(x, y, index, label, value, span, total)
 end
 
 local function redraw()
+  -- the clocks and the pad call this constantly; while a system menu is open
+  -- the screen belongs to it, and drawing here would make the two flicker
+  if norns and norns.menu and norns.menu.status() then return end
   screen.clear()
   screen.level(15)
   screen.font_size(8)
