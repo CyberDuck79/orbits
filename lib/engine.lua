@@ -14,13 +14,14 @@ local step_accent, step_active = steps.step_accent, steps.step_active
 local step_microtiming, step_probability = steps.step_microtiming, steps.step_probability
 local track_muted = steps.track_muted
 local modulation = require 'orbits/lib/modulation'
-local random_tick = modulation.random_tick
+local random_tick, rewind = modulation.random_tick, modulation.rewind
 local patterns = require 'orbits/lib/patterns'
 local do_pattern_switch = patterns.do_pattern_switch
 
 local function toggle_play()
   S.playing = not S.playing
   S.play_epoch = S.play_epoch + 1
+  for t = 1, NUM_TRACKS do rewind(t) end -- same random sequences on every run
   if not S.playing then
     for t = 1, NUM_TRACKS do
       tracks[t].step = 0

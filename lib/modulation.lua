@@ -124,6 +124,17 @@ local function set_modulation_enabled(t, sl, on)
   r.enabled = on
 end
 
+-- puts every modulation of a track back at the start of its sequence, so each
+-- run (and each pattern switch) replays the same random sequence from the
+-- first step. The sequence itself is kept until "reroll". The first tick after
+-- a rewind lands on seq[1].
+local function rewind(t)
+  for _, r in pairs(tracks[t].random_states) do
+    r.pos = #r.seq
+    r.step_counter = RATE_STEPS[r.rate_index] - 1
+  end
+end
+
 -- advances (at `rate`) and applies every one of the track's enabled
 -- modulations -- not just the one focused on screen. Called once per
 -- sequencer tick. Ids that no longer exist (older saves) are skipped.
@@ -163,5 +174,6 @@ return {
   fresh_random_seq = fresh_random_seq,
   lin_to_pad = lin_to_pad,
   random_tick = random_tick,
+  rewind = rewind,
   set_modulation_enabled = set_modulation_enabled,
 }

@@ -234,7 +234,7 @@ Each row is a fader that **shows** the parameter's value live. Setting the value
 | E3 `every` | The modulation changes every 1, 2, 4, 8, 16 or 32 steps of the track |
 | K3 `reroll` | Draws a new random sequence |
 
-The modulation follows a sequence of 16 random values that loops, so it sounds like a pattern rather than noise. Each parameter of each track has its own, and they all run at once. If you change the parameter by hand while its modulation is on, the modulation swings around the new value.
+The modulation follows a sequence of 16 random values that loops, so it sounds like a pattern rather than noise. Each parameter of each track has its own, and they all run at once. The sequence stays the same until you press **reroll**: every play starts it over from the beginning, and it is stored with the pattern (so it survives pattern switches and psets). If you change the parameter by hand while its modulation is on, the modulation swings around the new value.
 
 ## Session page
 

@@ -333,10 +333,17 @@ S.redraw_grid = redraw_grid
 
 -- Blink clock: toggles S.pulse_phase every 250 ms (selected step, armed copy
 -- mode, pending patterns, the selected fader... pulse with it) and redraws
--- the grid only when something on it is actually blinking.
+-- the grid only when something on it is actually blinking. Every 2 s it also
+-- resends all the LEDs, in case the Launchpad missed some.
 local function start_blink()
+  local ticks = 0
   S.pulse_metro = metro.init(function()
     S.pulse_phase = not S.pulse_phase
+    -- refresh() only sends the LEDs that changed, so a pad the Launchpad
+    -- missed (e.g. right after it switched to Programmer mode) would stay
+    -- wrong until it changes. Resend everything every 2 s to heal that.
+    ticks = ticks + 1
+    if ticks % 8 == 0 and S.pad then S.pad:refresh(true) end
     local needs_redraw = S.selected_step ~= nil or S.copy_mode_active or S.chain_edit_pos ~= nil
       or (S.page == "user" and S.last_slider ~= nil)
     if not needs_redraw then

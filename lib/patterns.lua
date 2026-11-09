@@ -7,6 +7,7 @@ local consts = require 'orbits/lib/consts'
 local BASE_NOTE, DEFAULT_DIVISION = consts.BASE_NOTE, consts.DEFAULT_DIVISION
 local DEFAULT_GROOVE_LENGTH_INDEX = consts.DEFAULT_GROOVE_LENGTH_INDEX
 local NUM_TRACKS = consts.NUM_TRACKS
+local rewind = require('orbits/lib/modulation').rewind
 
 -- A pattern is a snapshot of everything that shapes a track's rhythm/melody
 -- -- not its identity (voice) or live performance state (mute).
@@ -47,6 +48,7 @@ local function apply_pattern(t, snap)
   end
   trk.step = 0
   trk.arp_pos = 0
+  rewind(t) -- the snapshot's saved position is stale; start the sequences over
 end
 
 -- a blank pattern, same defaults a freshly-initialized track gets

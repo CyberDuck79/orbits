@@ -125,7 +125,7 @@ The User page exposes 8 faders (`USER_SLIDERS`). Each one describes its range, h
 {enabled, amount, rate_index, seq[16], pos, step_counter, base, last}
 ```
 
-At every step: `value = base + seq[pos] × (amount/127) × (hi−lo)/2`, clamped (or wrapped for rotation). `seq` is a random list of 16 values, advanced every `RATE_STEPS[rate_index]` steps. `last` remembers the last value written: if it differs from the current value, someone changed the parameter by hand, and `base` follows. Disabling restores `base`. Several modulations run in parallel; only the selected fader's one is editable on screen.
+At every step: `value = base + seq[pos] × (amount/127) × (hi−lo)/2`, clamped (or wrapped for rotation). `seq` is a random list of 16 values, advanced every `RATE_STEPS[rate_index]` steps. `last` remembers the last value written: if it differs from the current value, someone changed the parameter by hand, and `base` follows. Disabling restores `base`. `rewind(t)` puts every modulation of a track back at the start of its sequence (called on every play/stop and whenever a pattern is applied), so a run always replays the same sequence; `seq` itself only changes on "reroll". Several modulations run in parallel; only the selected fader's one is editable on screen.
 
 ### Patterns (`patterns.lua`)
 A pattern is a **snapshot** of the fields listed in `PATTERN_FIELDS` (rhythm, notes, velocities, repeats, groove, scale, arp, phrase, modulations). Neither the voice nor the mute is part of it. There is no "save" action: switching pattern first re-captures the active one into its slot. 32 slots per track (`trk.patterns`), and a 16-position song chain (`trk.song_chain`).
@@ -175,6 +175,7 @@ The harness only covers simulated I/O: it proves there is no regression, not tha
 - **Lua version.** norns (matron) runs Lua 5.3, the shell has 5.1/LuaJIT. Avoid what differs (integer operators, `//`) or check it on the device.
 - **Accidental globals.** Only `init`, `cleanup`, `enc`, `key`, `redraw` should be global. Check: `luac -l` (the shell's Lua 5.1) on each file; only `GETGLOBAL` accesses to the standard library and the norns APIs are normal.
 - **Screen drawing.** `screen.rect` is safe; `screen.circle` followed by `stroke` leaves stray lines (Cairo's current point). The round dots (`draw_round_dot`) are therefore made of three filled `rect`s, with no arc.
+- **Launchpad LEDs.** `refresh()` only sends what changed, so a pad the Launchpad missed (typically right after it switched to Programmer mode) would stay wrong. The blink metro in `leds.lua` therefore resends every LED with `refresh(true)` every 2 s.
 - **`lp3` mod.** `connect()` returns `false` when no Launchpad is plugged in but keeps waiting for one; `pad.status` is optional and drives the "Launchpad unplugged" indicator; the module is cached when matron starts (restart matron after changing the mod).
 - **`clock.lua:62 bad argument #1 to 'resume'`** in the log when switching scripts: an internal norns race, not caused by this script, harmless.
 - **Redrawing from a clock.** Calling `S.redraw_grid()` from a coroutine is normal, but each call also triggers `redraw_screen`. This is intentional (simple) and light enough here.
