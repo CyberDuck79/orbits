@@ -161,7 +161,7 @@ scene("drums", "pad-drums.svg", {
   },
   right = TRACKS,
   top = with_pages({[1] = "pulses +", [2] = "pulses −", [3] = "rotate ←", [4] = "rotate →"}),
-  caption = "amber = pulse · blue = manual step · grey = inactive",
+  caption = "amber = pulse · paler amber = accented pulse · blue = manual step",
 })
 
 scene("drums_edit", "pad-drums-edit.svg", {

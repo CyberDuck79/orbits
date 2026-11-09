@@ -30,13 +30,14 @@ return function(S, consts, modulation)
     for _, s in ipairs(modulation.USER_SLIDERS) do if s.id == id then return s end end
   end
 
-  -- Drums page, stopped: a 16-step pattern with a manual step, repeats, two
-  -- muted tracks. No accent and no playhead, so every lit pad is a plain pulse.
+  -- Drums page, stopped: a 16-step pattern with an accent, a manual
+  -- step, repeats, two muted tracks. No playhead.
   function scenes.drums()
     reset()
     local trk = T[1]
     trk.length, trk.pulses, trk.rotation = 16, 5, 2
     trk.manual[8] = {active = true, accent = false, probability = 100, microtiming = 0}
+    trk.pulse_accents[1] = true
     trk.division = consts.DIVISIONS_STRAIGHT[5]
     trk.repeat_time = consts.DIVISIONS_STRAIGHT[6]
     trk.repeats = 3
