@@ -64,13 +64,13 @@ Pressing play again stops the sequencer and rewinds every track to its first ste
       │           8 × 8 grid                   │   …
       │       (depends on the page)            │   T7
       │                                        │
-      └────────────────────────────────────────┘  play / shift
+      └────────────────────────────────────────┘  play / mute
 ```
 
 - **Top row, right half**: the four pages. The lit one is the current page.
 - **Top row, left half**: the arrows. They are lit on the Drums and Keys pages, where they do something (see below).
 - **Right column**: the 7 tracks (top = track 1). The selected track is amber, a muted one is red. Everything you edit applies to the selected track.
-- **Bottom of the right column**: play / stop, and **shift** (hold it).
+- **Bottom of the right column** (the *Stop Solo Mute* button): **tap** to play / stop. **Hold** it to mute tracks and to change the tempo (see [Playing](#playing-tracks-mute-tempo)).
 - **Logo (top right corner)**: flashes on every quarter note while playing.
 - **The 8 × 8 grid**: its meaning depends on the page. Each row is one parameter.
 
@@ -83,7 +83,7 @@ The screen never repeats what the Launchpad already shows. It carries what the p
 - The **bottom half** of the Drums and Keys pages shows the values of the pad rows. The small icon to the left of each one shows which row of the page it belongs to.
 - **K1** is not used.
 
-![Drums page, nothing selected](docs/img/screen-drums.svg)
+![Drums page, nothing selected](docs/img/screen-drums.png)
 
 ### Colours
 
@@ -130,7 +130,7 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 
 ![A step selected on the Launchpad](docs/img/pad-drums-edit.svg)
 
-![Step sub-page on the screen](docs/img/screen-drums-step.svg)
+![Step sub-page on the screen](docs/img/screen-drums-step.png)
 
 | Control | What it does |
 |---|---|
@@ -154,9 +154,9 @@ E1 cycles through four sub-pages. The first one, *step*, is blank (`--`) until a
 | *repeat* | `ramp`: velocity slope across the repeats, −63…63 | `pace`: speeding up (+) or slowing down (−) of the repeats |
 | *groove* | `amount`: how strongly the groove shapes velocity, 0–127 | `length`: length of the groove cycle in bars (1…64) |
 
-![velocity sub-page](docs/img/screen-drums-velocity.svg)
-![repeat sub-page](docs/img/screen-drums-repeat.svg)
-![groove sub-page](docs/img/screen-drums-groove.svg)
+![velocity sub-page](docs/img/screen-drums-velocity.png)
+![repeat sub-page](docs/img/screen-drums-repeat.png)
+![groove sub-page](docs/img/screen-drums-groove.png)
 
 ### Repeats
 
@@ -183,7 +183,7 @@ From top to bottom:
 - Changing the root or the scale moves the selected notes to the nearest note in the new scale, so the chord always stays in key.
 - **↑ / ↓** move the keyboard view by an octave (the chord does not change). **← / →** transpose the whole chord by a semitone.
 
-![Keys screen](docs/img/screen-keys.svg)
+![Keys screen](docs/img/screen-keys.png)
 
 | Control | What it does |
 |---|---|
@@ -221,7 +221,7 @@ Each row is a fader that **shows** the parameter's value live. Setting the value
 
 **Touch a row** to select it (its bright pad blinks). Until you do, the screen says `touch a row`. It then configures that parameter's modulation:
 
-![User screen](docs/img/screen-user.svg)
+![User screen](docs/img/screen-user.png)
 
 | Control | What it does |
 |---|---|
@@ -246,7 +246,7 @@ There is no *save* button: the active pattern always follows what you do, and sw
 | Patterns 1–32 (four rows) | Dim green = has content, bright green = loaded |
 | Song chain (two rows) | 16 positions |
 
-![Session screen](docs/img/screen-session.svg)
+![Session screen](docs/img/screen-session.png)
 
 ### Switching patterns
 
@@ -266,12 +266,12 @@ The chain plays patterns in order, on its own for each track.
 
 - **Select a track**: tap its button in the right column.
 - **Play / stop**: tap the bottom button of the right column (stopping rewinds all tracks).
-- **Shift**: hold the bottom button. While it is held:
+- **Hold the bottom button** (*Stop Solo Mute*). While it is held:
   - **tap a track button** to latch its **mute** (the button turns red; tap again to unmute);
   - **hold a track button** to mute it only while you hold it (a momentary mute);
-  - **turn E2** to change the **tempo**; the screen shows it. Releasing shift after changing something does not toggle play.
+  - **turn E2** to change the **tempo**; the screen shows it. Letting go after muting or changing the tempo does not toggle play.
 
-![Tempo screen](docs/img/screen-tempo.svg)
+![Tempo screen](docs/img/screen-tempo.png)
 
 ## Saving
 
@@ -304,9 +304,9 @@ The default division is 1/16, the default pattern is 4 pulses on 8 steps, the de
 | ↑ ↓ ← → on Drums | Pulses +/− , rotation ←/→ |
 | ↑ ↓ ← → on Keys | Octave view up/down, chord transpose −/+ semitone |
 | Tap a track button | Select the track |
-| Hold shift + tap a track | Latch mute |
-| Hold shift + hold a track | Momentary mute |
-| Hold shift + E2 | Tempo |
+| Hold play/mute, tap a track | Latch mute |
+| Hold play/mute, hold a track | Momentary mute |
+| Hold play/mute, turn E2 | Tempo |
 | Tap a pattern | Switch (at the quantize boundary) |
 | Hold a pattern | Copy the active pattern there |
 | Hold the active pattern, tap another | Copy mode |
@@ -317,7 +317,7 @@ The default division is 1/16, the default pattern is 4 pulses on 8 steps, the de
 
 - **A cross (✕) at the top of the screen, between the page name and the sub-page name** (see below): the Launchpad is not connected. Plug it in; lp3seq connects as soon as it appears. If it never does, check that the **LP3** mod is enabled in **SYSTEM > MODS** and that you restarted the norns after enabling it.
 
-  ![Launchpad not connected](docs/img/screen-disconnected.svg)
+  ![Launchpad not connected](docs/img/screen-disconnected.png)
 
 - **No sound**: check that the track has a voice (**T… OUTPUT** in PARAMETERS), that it is not muted (red button) and that its pulses are not 0.
 
