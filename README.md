@@ -78,7 +78,7 @@ Pressing play again stops the sequencer and rewinds every track to its first ste
 
 The screen never repeats what the Launchpad already shows. It carries what the pads cannot: the numeric values and the fine adjustments.
 
-- **E1** cycles through the *sub-pages* of the current page. The pixels at the top right show how many there are and which one is current; the sub-page's name sits next to them. The Drums page also jumps to a sub-page when you touch certain pads (see below).
+- **E1** cycles through the *sub-pages* of the current page. The small markers at the top right show where you are, and the sub-page's name sits next to them. On the Drums page the first marker stands for the special *step* sub-page: a single pixel normally, a blinking white square while it is up. The Drums page also jumps to a sub-page when you touch certain pads (see below).
 - **E2 / E3** (knobs) and **K2 / K3** (keys) are laid out as the screen shows them: the left column belongs to E2 (round dot) and K2 (square), the right column to E3 and K3. A **filled square** means a switch is on, a hollow one off. A `--` means that control does nothing right now.
 - The **bottom half** of the Drums and Keys pages shows the values of the pad rows. The small icon to the left of each one shows which row of the page it belongs to.
 - **K1** is not used.
@@ -128,7 +128,7 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 
 ### Editing a step
 
-**Hold a step pad** (about half a second) to select it. Its pad blinks, and the screen switches to the *step* sub-page. This sub-page is special: E1 cannot reach it or leave it, it is there for as long as a step is selected. Its marker at the top right is a white square that blinks together with the step's pad, as a reminder of why the screen is locked.
+**Hold a step pad** (about half a second) to select it. Its pad blinks, and the screen switches to the *step* sub-page. This sub-page is special: E1 cannot reach it or leave it, it is there for as long as a step is selected. Its marker at the top right (the first one) turns from a single pixel into a white square that blinks together with the step's pad, as a reminder of why the screen is locked.
 
 ![A step selected on the Launchpad](docs/img/pad-drums-edit.svg)
 

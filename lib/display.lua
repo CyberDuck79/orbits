@@ -114,32 +114,37 @@ local function redraw()
     local w = screen.text_extents(sp.name)
     screen.move(128 - w, 8)
     screen.text(sp.name)
-  elseif step_locked() then
-    -- the step sub-page is special: E1 can't reach it or leave it. Its marker
-    -- is a 3x3 square blinking with the selected step's pad on the grid, to
-    -- say why the page is locked.
-    local w_name = screen.text_extents(sp.name)
-    screen.move(128 - 5 - w_name - 3, 8)
-    screen.text(sp.name)
-    screen.level(S.pulse_phase and 15 or 5)
-    screen.rect(123, 4, 3, 3)
-    screen.fill()
-    screen.level(15)
   else
+    -- sub-page markers, top right, one 5px cell each. On the Drums page the
+    -- first cell stands for the special "step" sub-page, which E1 can't reach:
+    -- a single pixel while no step is selected, and a white square blinking
+    -- with the selected step's pad on the grid when it is up, to say why the
+    -- page is locked. The other cells are squares, the current one bright.
     local list = subpages[S.page]
-    if #list > 1 then
-      local idx = current_subpage[S.page]
-      local dots_w = #list * 5
+    local has_step = S.page == "drums"
+    local n = #list + (has_step and 1 or 0)
+    if n > 1 then
+      local locked = step_locked()
       local w_name = screen.text_extents(sp.name)
-      screen.move(128 - dots_w - w_name - 3, 8)
+      screen.move(128 - n * 5 - w_name - 3, 8)
       screen.text(sp.name)
 
-      -- one pixel per sub-page, top-right (centred on where the 3x3 step
-      -- marker sits), current one bright
-      local dot_x = 128 - dots_w
+      local x0 = 128 - n * 5
+      local first = 1
+      if has_step then
+        if locked then
+          screen.level(S.pulse_phase and 15 or 5)
+          screen.rect(x0, 4, 3, 3)
+        else
+          screen.level(5)
+          screen.rect(x0 + 1, 5, 1, 1)
+        end
+        screen.fill()
+        first = 2
+      end
       for i = 1, #list do
-        screen.level(i == idx and 15 or 5)
-        screen.rect(dot_x + (i - 1) * 5 + 1, 5, 1, 1)
+        screen.level((not locked and i == current_subpage[S.page]) and 15 or 4)
+        screen.rect(x0 + (first + i - 2) * 5, 4, 3, 3)
         screen.fill()
       end
       screen.level(15)
