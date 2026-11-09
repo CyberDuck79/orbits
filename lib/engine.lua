@@ -21,7 +21,11 @@ local do_pattern_switch = patterns.do_pattern_switch
 local function toggle_play()
   S.playing = not S.playing
   S.play_epoch = S.play_epoch + 1
-  for t = 1, NUM_TRACKS do rewind(t) end -- same random sequences on every run
+  -- every run starts from the same place: random sequences and arp position
+  for t = 1, NUM_TRACKS do
+    rewind(t)
+    tracks[t].arp_pos = 0
+  end
   if not S.playing then
     for t = 1, NUM_TRACKS do
       tracks[t].step = 0
