@@ -10,6 +10,7 @@ local modulation = require 'lp3seq/lib/modulation'
 local USER_SLIDERS = modulation.USER_SLIDERS
 local pages = require 'lp3seq/lib/pages'
 local current_subpage_def, slot_ready = pages.current_subpage_def, pages.slot_ready
+local step_locked = pages.step_locked
 local subpages = pages.subpages
 
 -- small filled "dot" built only from rects (no arcs/circles: those leave a
@@ -113,6 +114,17 @@ local function redraw()
     local w = screen.text_extents(sp.name)
     screen.move(128 - w, 8)
     screen.text(sp.name)
+  elseif step_locked() then
+    -- the step sub-page is special: E1 can't reach it or leave it. Its marker
+    -- is a 3x3 square blinking with the selected step's pad on the grid, to
+    -- say why the page is locked.
+    local w_name = screen.text_extents(sp.name)
+    screen.move(128 - 5 - w_name - 3, 8)
+    screen.text(sp.name)
+    screen.level(S.pulse_phase and 15 or 5)
+    screen.rect(123, 4, 3, 3)
+    screen.fill()
+    screen.level(15)
   else
     local list = subpages[S.page]
     if #list > 1 then
@@ -122,11 +134,12 @@ local function redraw()
       screen.move(128 - dots_w - w_name - 3, 8)
       screen.text(sp.name)
 
-      -- one dot per sub-page, top-right, current one bright
+      -- one pixel per sub-page, top-right (centred on where the 3x3 step
+      -- marker sits), current one bright
       local dot_x = 128 - dots_w
       for i = 1, #list do
-        screen.level(i == idx and 15 or 4)
-        screen.rect(dot_x + (i - 1) * 5, 4, 3, 3)
+        screen.level(i == idx and 15 or 5)
+        screen.rect(dot_x + (i - 1) * 5 + 1, 5, 1, 1)
         screen.fill()
       end
       screen.level(15)

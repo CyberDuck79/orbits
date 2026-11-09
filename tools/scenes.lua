@@ -116,9 +116,8 @@ return function(S, consts, modulation)
     S.pulse_phase = true
   end
 
-  function scenes.screen_drums_velocity() reset(); S.current_subpage.drums = 2 end
-  function scenes.screen_drums_repeat() reset(); S.current_subpage.drums = 3 end
-  function scenes.screen_drums_groove() reset(); S.current_subpage.drums = 4 end
+  function scenes.screen_drums_repeat() reset(); S.current_subpage.drums = 2 end
+  function scenes.screen_drums_groove() reset(); S.current_subpage.drums = 3 end
 
   function scenes.screen_keys()
     reset()

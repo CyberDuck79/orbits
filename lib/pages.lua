@@ -15,62 +15,57 @@ local RATE_STEPS, USER_SLIDERS = modulation.RATE_STEPS, modulation.USER_SLIDERS
 local focused_state, fresh_random_seq = modulation.focused_state, modulation.fresh_random_seq
 local set_modulation_enabled = modulation.set_modulation_enabled
 
-local STEP_SUBPAGE = 1 -- index of the "step" sub-page within subpages.drums
-
 -- Each grid page (drums/keys/user) has a list of sub-pages. E1 cycles
 -- through them; the grid never changes because of this, only the screen.
 -- Each sub-page independently assigns e2/k2/e3/k3, or leaves them nil.
+-- On the Drums page, touching the repeats or groove pads also jumps to the
+-- matching sub-page (see input.lua).
+
+-- The "step" sub-page is special: it is not part of the list E1 cycles through.
+-- It takes over the Drums page's controls for as long as a step is selected
+-- (hold a step pad), and is left by deselecting the step.
+local step_page = {
+  name = "step",
+  e2 = {
+    label = function() return "prob" end,
+    value = function() return step_probability(S.selected_track, S.selected_step) .. "%" end,
+    delta = function(d)
+      local v = util.clamp(step_probability(S.selected_track, S.selected_step) + d, 0, 100)
+      set_step_probability(S.selected_track, S.selected_step, v)
+    end,
+  },
+  k2 = {
+    -- unavailable when a generated pulse already occupies this step:
+    -- the pulse's own parameters take priority, so there's nothing
+    -- manual to toggle from here
+    available = function()
+      local _, index_at = pulse_index_map(S.selected_track)
+      return index_at[S.selected_step] == nil
+    end,
+    label = function() return "manual" end,
+    state = function()
+      local m = tracks[S.selected_track].manual[S.selected_step]
+      return m and m.active or false
+    end,
+    action = function() toggle_manual_step(S.selected_track, S.selected_step) end,
+  },
+  e3 = {
+    label = function() return "timing" end,
+    value = function() return "+" .. step_microtiming(S.selected_track, S.selected_step) .. "%" end,
+    delta = function(d)
+      local v = util.clamp(step_microtiming(S.selected_track, S.selected_step) + d, 0, 90)
+      set_step_microtiming(S.selected_track, S.selected_step, v)
+    end,
+  },
+  k3 = {
+    label = function() return "accent" end,
+    state = function() return step_accent(S.selected_track, S.selected_step) end,
+    action = function() toggle_step_accent(S.selected_track, S.selected_step) end,
+  },
+}
 
 local subpages = {
   drums = {
-    {name = "step",
-      -- with no step selected, every slot below is unavailable, so this
-      -- doubles as the blank default view (no separate "pattern" sub-page needed)
-      e2 = {
-        available = function() return S.selected_step ~= nil end,
-        label = function() return "prob" end,
-        value = function() return step_probability(S.selected_track, S.selected_step) .. "%" end,
-        delta = function(d)
-          local v = util.clamp(step_probability(S.selected_track, S.selected_step) + d, 0, 100)
-          set_step_probability(S.selected_track, S.selected_step, v)
-        end,
-      },
-      k2 = {
-        -- unavailable when a generated pulse already occupies this step:
-        -- the pulse's own parameters take priority, so there's nothing
-        -- manual to toggle from here
-        available = function()
-          if S.selected_step == nil then return false end
-          local _, index_at = pulse_index_map(S.selected_track)
-          return index_at[S.selected_step] == nil
-        end,
-        label = function() return "manual" end,
-        state = function()
-          if S.selected_step == nil then return false end
-          local m = tracks[S.selected_track].manual[S.selected_step]
-          return m and m.active or false
-        end,
-        action = function()
-          if S.selected_step == nil then return end
-          toggle_manual_step(S.selected_track, S.selected_step)
-        end,
-      },
-      e3 = {
-        available = function() return S.selected_step ~= nil end,
-        label = function() return "timing" end,
-        value = function() return "+" .. step_microtiming(S.selected_track, S.selected_step) .. "%" end,
-        delta = function(d)
-          local v = util.clamp(step_microtiming(S.selected_track, S.selected_step) + d, 0, 90)
-          set_step_microtiming(S.selected_track, S.selected_step, v)
-        end,
-      },
-      k3 = {
-        available = function() return S.selected_step ~= nil end,
-        label = function() return "accent" end,
-        state = function() return step_accent(S.selected_track, S.selected_step) end,
-        action = function() toggle_step_accent(S.selected_track, S.selected_step) end,
-      },
-    },
     {name = "velocity",
       e2 = {
         label = function() return "velocity" end,
@@ -234,11 +229,26 @@ local function switch_page(new_page)
   S.redraw_grid()
 end
 
--- a held temporary page takes over the controls; otherwise the current
--- page's selected sub-page owns them
+-- the Drums page is locked on the "step" sub-page while a step is selected
+local function step_locked()
+  return S.page == "drums" and S.selected_step ~= nil
+end
+
+-- a held temporary page takes over the controls, then a selected step;
+-- otherwise the current page's selected sub-page owns them
 local function current_subpage_def()
   if S.active_temp_page then return temp_pages[S.active_temp_page] end
+  if step_locked() then return step_page end
   return subpages[S.page][current_subpage[S.page]]
+end
+
+-- jumps to a sub-page of the page by name; leaves step editing first, since
+-- the step page is only up while a step is selected
+local function select_subpage(page, name)
+  if page == "drums" then S.selected_step = nil end
+  for i, sp in ipairs(subpages[page]) do
+    if sp.name == name then current_subpage[page] = i end
+  end
 end
 
 -- a slot (e2/k2/e3/k3) counts as assigned only if present and, when it
@@ -248,11 +258,12 @@ local function slot_ready(slot)
 end
 
 return {
-  STEP_SUBPAGE = STEP_SUBPAGE,
   close_temp_page = close_temp_page,
   current_subpage_def = current_subpage_def,
   open_temp_page = open_temp_page,
+  select_subpage = select_subpage,
   slot_ready = slot_ready,
+  step_locked = step_locked,
   subpages = subpages,
   switch_page = switch_page,
 }

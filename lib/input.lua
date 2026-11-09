@@ -20,7 +20,7 @@ local queue_pattern_switch = patterns.queue_pattern_switch
 local engine = require 'lp3seq/lib/engine'
 local toggle_play = engine.toggle_play
 local pages = require 'lp3seq/lib/pages'
-local STEP_SUBPAGE, close_temp_page = pages.STEP_SUBPAGE, pages.close_temp_page
+local close_temp_page, select_subpage = pages.close_temp_page, pages.select_subpage
 local open_temp_page, switch_page = pages.open_temp_page, pages.switch_page
 
 local function select_track(t)
@@ -30,7 +30,6 @@ end
 
 local function enter_step_edit(i)
   S.selected_step = i
-  current_subpage.drums = STEP_SUBPAGE
   S.pulse_phase = true
   S.redraw_grid()
 end
@@ -67,6 +66,7 @@ local function handle_drums_key(x, y, z)
   if y == 2 then
     if z == 1 then
       tracks[S.selected_track].repeats = REPEATS_VALUES[x]
+      select_subpage("drums", "repeat") -- even when the touched pad is already the selected one
       S.redraw_grid()
     end
     return
@@ -75,6 +75,7 @@ local function handle_drums_key(x, y, z)
   if y == 1 then
     if z == 1 then
       tracks[S.selected_track].groove = x
+      select_subpage("drums", "groove")
       S.redraw_grid()
     end
     return

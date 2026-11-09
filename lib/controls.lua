@@ -5,11 +5,13 @@ local S = require 'lp3seq/lib/state'
 local current_subpage = S.current_subpage
 local pages = require 'lp3seq/lib/pages'
 local current_subpage_def, slot_ready = pages.current_subpage_def, pages.slot_ready
+local step_locked = pages.step_locked
 local subpages = pages.subpages
 
 local function enc(n, d)
   if n == 1 then
-    if S.active_temp_page then return end -- a temp page is a single view; nothing to cycle
+    -- a temp page and the step page are single views; nothing to cycle
+    if S.active_temp_page or step_locked() then return end
     local list = subpages[S.page]
     current_subpage[S.page] = ((current_subpage[S.page] - 1 + d) % #list) + 1
     S.redraw_screen()

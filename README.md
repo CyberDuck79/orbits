@@ -78,12 +78,12 @@ Pressing play again stops the sequencer and rewinds every track to its first ste
 
 The screen never repeats what the Launchpad already shows. It carries what the pads cannot: the numeric values and the fine adjustments.
 
-- **E1** cycles through the *sub-pages* of the current page. The dots at the top right show how many there are and which one is current; the sub-page's name sits next to them.
+- **E1** cycles through the *sub-pages* of the current page. The pixels at the top right show how many there are and which one is current; the sub-page's name sits next to them. The Drums page also jumps to a sub-page when you touch certain pads (see below).
 - **E2 / E3** (knobs) and **K2 / K3** (keys) are laid out as the screen shows them: the left column belongs to E2 (round dot) and K2 (square), the right column to E3 and K3. A **filled square** means a switch is on, a hollow one off. A `--` means that control does nothing right now.
 - The **bottom half** of the Drums and Keys pages shows the values of the pad rows. The small icon to the left of each one shows which row of the page it belongs to.
 - **K1** is not used.
 
-![Drums page, nothing selected](docs/img/screen-drums.png)
+![Drums page, default sub-page (velocity)](docs/img/screen-drums.png)
 
 ### Colours
 
@@ -128,7 +128,7 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 
 ### Editing a step
 
-**Hold a step pad** (about half a second) to select it. Its pad blinks, and the screen switches to the *step* sub-page:
+**Hold a step pad** (about half a second) to select it. Its pad blinks, and the screen switches to the *step* sub-page. This sub-page is special: E1 cannot reach it or leave it, it is there for as long as a step is selected. Its marker at the top right is a white square that blinks together with the step's pad, as a reminder of why the screen is locked.
 
 ![A step selected on the Launchpad](docs/img/pad-drums-edit.svg)
 
@@ -143,20 +143,18 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 
 Settings of an amber pulse follow **that pulse**, not the pad: if you change length, pulses or rotation, its accent, probability and timing move with it. Manual steps keep their own.
 
-**Tap any step pad** to leave step editing. **Hold another pad** to jump straight to it.
+**Tap any step pad** to deselect the step: the screen goes back to *velocity*. **Hold another step pad** to jump straight to it. Touching a pad of the **repeats** or **groove** rows also leaves step editing, and jumps to the matching sub-page.
 
 ### Screen sub-pages
 
-E1 cycles through four sub-pages. The first one, *step*, is blank (`--`) until a step is selected.
+E1 cycles through three sub-pages: *velocity* (the default), *repeat* and *groove*. Touching a pad of the **repeats** row jumps to *repeat*, and touching a pad of the **groove** row jumps to *groove*, even if the pad you touch is already the selected one. The *step* sub-page is described above.
 
 | Sub-page | E2 | E3 |
 |---|---|---|
-| *step* | probability | timing (K2 manual, K3 accent) |
 | *velocity* | `velocity`: base velocity, 0–127 | `accent+`: velocity added to accented hits |
 | *repeat* | `ramp`: velocity slope across the repeats, −63…63 | `pace`: speeding up (+) or slowing down (−) of the repeats |
 | *groove* | `amount`: how strongly the groove shapes velocity, 0–127 | `length`: length of the groove cycle in bars (1…64) |
 
-![velocity sub-page](docs/img/screen-drums-velocity.png)
 ![repeat sub-page](docs/img/screen-drums-repeat.png)
 ![groove sub-page](docs/img/screen-drums-groove.png)
 
@@ -305,7 +303,7 @@ The default division is 1/16, the default pattern is 4 pulses on 8 steps, the de
 | Gesture | Result |
 |---|---|
 | Tap a step (nothing selected) | Pattern length = that step |
-| Hold a step | Edit that step |
+| Hold a step | Edit that step (the screen locks on the *step* sub-page) |
 | ↑ ↓ ← → on Drums | Pulses +/− , rotation ←/→ |
 | ↑ ↓ ← → on Keys | Octave view up/down, chord transpose −/+ semitone |
 | Tap a track button | Select the track |
