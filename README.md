@@ -122,6 +122,7 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 - The pattern is **Euclidean**: *pulses* spread as evenly as possible over *length* steps, then shifted by *rotation*. Pulses are amber.
 - **Tap a step pad** to set the track's **length** to that step (tap pad 12 for a 12-step pattern). Steps beyond the length go dark. The pulse count never exceeds the length.
 - **↑ / ↓** add or remove a pulse. **← / →** rotate the pattern.
+- While playing, the **playhead** lightens each pad it passes, pulse or not. An **accented** step is also paler.
 - A step is only ever *added* to the Euclidean pattern, never removed: if you want a different rhythm, change pulses or rotation, or add manual steps (below).
 
 ### Editing a step

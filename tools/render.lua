@@ -60,7 +60,6 @@ init()
 local S = require 'lp3seq/lib/state'
 local consts = require 'lp3seq/lib/consts'
 local modulation = require 'lp3seq/lib/modulation'
-local steps = require 'lp3seq/lib/steps'
 local scenes = dofile(scenes_file)(S, consts, modulation)
 
 -- ------------------------------------------------------------ SVG utils ----
@@ -152,12 +151,7 @@ local TRACKS = {[8] = "track 1", [7] = "track 2", [6] = "track 3", [5] = "track 
 local PAGES = {[5] = "Session", [6] = "Drums", [7] = "Keys", [8] = "User"}
 local function with_pages(t) for k, v in pairs(PAGES) do t[k] = v end return t end
 
--- Drums: say what the brighter pads are (accent / playhead), computed from the scene
-scenes.drums()
-local _, index_at = steps.pulse_index_map(1)
-local accent_step
-for i, k in pairs(index_at) do if k == 1 then accent_step = i end end
-local playhead = (S.tracks[1].step % S.tracks[1].length) + 1
+-- Drums
 scene("drums", "pad-drums.svg", {
   left = {
     [8] = "steps 1–8", [7] = "steps 9–16",
@@ -167,7 +161,7 @@ scene("drums", "pad-drums.svg", {
   },
   right = TRACKS,
   top = with_pages({[1] = "pulses +", [2] = "pulses −", [3] = "rotate ←", [4] = "rotate →"}),
-  caption = string.format("amber = pulse · blue = manual step · paler = accented step (%d) or step playing now (%d)", accent_step, playhead),
+  caption = "amber = pulse · blue = manual step · grey = inactive",
 })
 
 scene("drums_edit", "pad-drums-edit.svg", {
