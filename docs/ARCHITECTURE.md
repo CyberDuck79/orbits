@@ -1,6 +1,6 @@
 # lp3seq: technical documentation
 
-A 7-track Euclidean sequencer for norns, played from a Novation Launchpad Mini MK3 through the `lp3` mod. Sound goes out through `nb` (one voice per track).
+A 7-track Euclidean sequencer for norns, played from a Novation Launchpad Mini MK3 through the `lp3` mod. Notes go out through `nb` (one voice per track). Any `nb` player can be assigned to a track: internal synths and engines, but also external MIDI devices, since `nb` exposes every connected MIDI port as a player (channel, modulation CC and bend range are set in its params).
 
 This document explains **how the script is built, why, and where to look when you want to change something**. For usage, see the user documentation.
 
