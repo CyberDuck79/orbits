@@ -1,15 +1,36 @@
--- orbits: 7-track Euclidean sequencer for the Launchpad Mini MK3, driven by
--- the lp3 mod. Euclidean patterns with sticky manual overrides, accent,
--- per-step probability and micro-timing, per-track clock division, note
--- repeater, accent grooves, a chromatic keyboard with scale constraint,
--- arpeggiator and melodic phrases, random modulation of the rhythm
--- parameters, and a Session page for patterns and song chaining. Each track
--- plays through its own nb voice. The screen sub-page system (E1 cycles the
--- sub-pages of the current grid page; each assigns E2/K2/E3/K3) carries
--- everything that doesn't fit on pads.
+-- orbits
+-- euclidean sequencer
+-- for Launchpad Mini MK3
+--
+-- 7 tracks, each with its
+-- own length, pulses,
+-- rotation and clock:
+-- they drift apart like
+-- orbits
+--
+-- needs the lp3 mod
+-- (SYSTEM > MODS)
+--
+-- Launchpad: pick a page
+-- (Session, Drums, Keys,
+-- User), right column
+-- selects the track,
+-- bottom button plays,
+-- hold it for mute / tempo
+--
+-- E1 sub-page
+-- E2 / E3 values
+-- K2 / K3 switches
+--
+-- voices: nb or MIDI
+-- (see PARAMETERS)
+-- more in the README
+
+-- Entry point. Everything above the blank line is what the norns script
+-- browser shows, so keep it short and user-facing (8 lines, ~25 characters).
 --
 -- This file only wires things together: the code lives in lib/ (see
--- docs/ARCHITECTURE.md). Requires the "lp3" mod (SYSTEM > MODS > LP3).
+-- docs/ARCHITECTURE.md).
 
 -- Modules are loaded with require, which norns caches across script loads:
 -- drop ours first so relaunching the script always runs the files on disk.
