@@ -20,14 +20,14 @@ scp -q 'norns:dust/data/orbits/shot_*.png' /tmp/orbits_shots/
 python3 - <<'PY'
 import glob, os
 from PIL import Image
-# a norns screenshot is the 128x64 screen at 5x, centred on a black 640x384 canvas;
+# a norns screenshot is the 128x64 screen at 4x, centred on a black 640x384 canvas;
 # crop to the screen and add a thin frame so it stands out on a white page
 for f in sorted(glob.glob('/tmp/orbits_shots/shot_*.png')):
     name = os.path.basename(f)[5:-4].replace('_', '-')
     im = Image.open(f).convert('RGB')
     w, h = im.size
-    im = im.crop(((w - 640) // 2, (h - 320) // 2, (w - 640) // 2 + 640, (h - 320) // 2 + 320))
-    framed = Image.new('RGB', (660, 340), (60, 60, 68))
+    im = im.crop(((w - 512) // 2, (h - 256) // 2, (w - 512) // 2 + 512, (h - 256) // 2 + 256))
+    framed = Image.new('RGB', (532, 276), (60, 60, 68))
     framed.paste(im, (10, 10))
     framed.save('docs/img/%s.png' % name)
     print(name)

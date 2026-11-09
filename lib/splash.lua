@@ -23,10 +23,10 @@ local OUT_FOR = 0.4     -- final fade out
 
 -- {length, pulses}: lengths with no common rhythm, so the rings drift
 local RINGS = {{5, 2}, {7, 3}, {8, 3}, {9, 4}, {11, 5}, {12, 5}, {13, 5}}
-local CY, R = 20, 8
+local CY, R = 15, 8
 local function ring_x(i) return 10 + (i - 1) * 18 end
 
-local NAME, SCALE, NAME_Y = "orbits", 2, 42
+local NAME, SCALE, NAME_Y = "orbits", 2, 34
 local TAGLINE = "euclidean sequencer"
 local GLYPHS = {
   o = {"0110", "1001", "1001", "1001", "0110"},
@@ -121,7 +121,7 @@ function splash.draw(t)
   local a = smooth((t - NAME_AT - 0.5) / 0.4)
   if a > 0 then
     screen.level(level(5 * a))
-    screen.move(round((128 - screen.text_extents(TAGLINE)) / 2), 62)
+    screen.move(round((128 - screen.text_extents(TAGLINE)) / 2), 57)
     screen.text(TAGLINE)
   end
   screen.update()
