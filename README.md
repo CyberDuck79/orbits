@@ -92,8 +92,9 @@ One hue per kind of parameter, the same on the pads and on the User page:
 | Colour | Meaning |
 |---|---|
 | Amber | A generated (Euclidean) step. Brighter: accented step, or the step being played |
-| Blue | A step you added by hand; also the selected scale |
-| Cyan | The selected division or repeat time |
+| Light blue | A step you added by hand |
+| Cyan | The selected division or repeat time (close to light blue, but they never share a row) |
+| Blue | The selected scale |
 | Red | The selected repeat count; repeat ramp and pace |
 | Violet | The selected groove; groove amount and shape |
 | Orange | The selected root note |
@@ -138,7 +139,7 @@ The top two rows are the pattern of the selected track: steps 1–8 on the top r
 | E2 `prob` | Probability that the step plays, 0–100% |
 | E3 `timing` | Delay of the step, 0–90% of the track's division (it can only be late, never early) |
 | K3 `accent` | Accent: a louder hit (see `accent+` below). The pad turns brighter |
-| K2 `manual` | Turns the step into a hand-placed (blue) step, or off again. Only available on a step that is not already an amber pulse |
+| K2 `manual` | Turns the step into a hand-placed (light blue) step, or off again. Only available on a step that is not already an amber pulse |
 
 Settings of an amber pulse follow **that pulse**, not the pad: if you change length, pulses or rotation, its accent, probability and timing move with it. Manual steps keep their own.
 
