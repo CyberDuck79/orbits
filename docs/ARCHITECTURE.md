@@ -172,7 +172,7 @@ The harness only covers simulated I/O: it proves there is no regression, not tha
 - **Accidental globals.** Only `init`, `cleanup`, `enc`, `key`, `redraw` should be global. Check: `luac -l` (the shell's Lua 5.1) on each file; only `GETGLOBAL` accesses to the standard library and the norns APIs are normal.
 - **Screen drawing.** `screen.rect` is safe; `screen.circle` followed by `stroke` leaves stray lines (Cairo's current point). The round dots (`draw_round_dot`) are therefore made of three filled `rect`s, with no arc.
 - **`lp3` mod.** `connect()` returns `false` when no Launchpad is plugged in but keeps waiting for one; `pad.status` is optional and drives the "Launchpad unplugged" indicator; the module is cached when matron starts (restart matron after changing the mod).
-- **`clock.lua:62 bad argument #1 to 'resume'`** in the log when switching scripts: an internal norns race, already present before the split, harmless.
+- **`clock.lua:62 bad argument #1 to 'resume'`** in the log when switching scripts: an internal norns race, not caused by this script, harmless.
 - **Redrawing from a clock.** Calling `S.redraw_grid()` from a coroutine is normal, but each call also triggers `redraw_screen`. This is intentional (simple) and light enough here.
 
 ## 10. Where to change what
