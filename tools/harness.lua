@@ -1,4 +1,4 @@
--- Headless golden-master harness for lp3seq.
+-- Headless golden-master harness for orbits.
 --
 -- Runs the script against stub norns/lp3 APIs on a virtual clock, drives it
 -- with a long, deterministic pseudo-random sequence of pad/encoder/key
@@ -9,8 +9,8 @@
 --
 --   lua tools/harness.lua <root> <events> <out.log>
 --
--- <root> is the directory that contains the `lp3seq/` folder (the one
--- `include('lp3seq/...')` resolves against).
+-- <root> is the directory that contains the `orbits/` folder (the one
+-- `include('orbits/...')` resolves against).
 
 local root = arg[1]
 local n_events = tonumber(arg[2]) or 3000
@@ -29,14 +29,14 @@ local function log(...)
   out:write(table.concat(parts, " "), "\n")
 end
 
--- optional line coverage (COVER=1): which lines of lp3seq's own files ran.
+-- optional line coverage (COVER=1): which lines of orbits's own files ran.
 -- Hooks are per coroutine in Lua 5.1, so clock.run installs it on each one.
 local covered = {}
 local cover_fn
 if os.getenv("COVER") then
   cover_fn = function(_, line)
     local src = debug.getinfo(2, "S").source
-    if src:find("lp3seq", 1, true) and not src:find("harness", 1, true) then
+    if src:find("orbits", 1, true) and not src:find("harness", 1, true) then
       covered[src .. ":" .. line] = true
     end
   end
@@ -132,6 +132,7 @@ metro = {
 -- --------------------------------------------------------- misc stubs ----
 local saved_tabs
 util = {
+  time = function() return now end,
   clamp = function(x, lo, hi) return math.min(math.max(x, lo), hi) end,
   file_exists = function(p) return saved_tabs[p] ~= nil end,
 }
@@ -207,7 +208,7 @@ end
 
 -- ------------------------------------------------------------ scenario ----
 math.randomseed(1)
-dofile(root .. "/lp3seq/lp3seq.lua")
+dofile(root .. "/orbits/orbits.lua")
 
 local lcg = tonumber(os.getenv("SEED")) or 12345
 local function rnd(n)

@@ -1,4 +1,4 @@
--- lp3seq: 7-track Euclidean sequencer for the Launchpad Mini MK3, driven by
+-- orbits: 7-track Euclidean sequencer for the Launchpad Mini MK3, driven by
 -- the lp3 mod. Euclidean patterns with sticky manual overrides, accent,
 -- per-step probability and micro-timing, per-track clock division, note
 -- repeater, accent grooves, a chromatic keyboard with scale constraint,
@@ -14,20 +14,21 @@
 -- Modules are loaded with require, which norns caches across script loads:
 -- drop ours first so relaunching the script always runs the files on disk.
 for name in pairs(package.loaded) do
-  if name:find('^lp3seq/') then package.loaded[name] = nil end
+  if name:find('^orbits/') then package.loaded[name] = nil end
 end
 
 local lp3 = require 'lp3/lib/mod'
-local nb = include('lp3seq/lib/nb/lib/nb')
+local nb = include('orbits/lib/nb/lib/nb')
 
-local S = require 'lp3seq/lib/state'
-local consts = require 'lp3seq/lib/consts'
-local patterns = require 'lp3seq/lib/patterns'
-local engine = require 'lp3seq/lib/engine'
-local input = require 'lp3seq/lib/input'
-local leds = require 'lp3seq/lib/leds'
-local display = require 'lp3seq/lib/display'
-local controls = require 'lp3seq/lib/controls'
+local S = require 'orbits/lib/state'
+local consts = require 'orbits/lib/consts'
+local patterns = require 'orbits/lib/patterns'
+local engine = require 'orbits/lib/engine'
+local input = require 'orbits/lib/input'
+local leds = require 'orbits/lib/leds'
+local display = require 'orbits/lib/display'
+local controls = require 'orbits/lib/controls'
+local splash = require 'orbits/lib/splash'
 
 -- norns calls these globals
 redraw = display.redraw
@@ -36,7 +37,7 @@ key = controls.key
 
 function init()
   nb:init()
-  params:add_separator("LP3SEQ")
+  params:add_separator("ORBITS")
   for t = 1, consts.NUM_TRACKS do
     nb:add_param("voice_t" .. t, "T" .. t .. " OUTPUT")
   end
@@ -64,10 +65,11 @@ function init()
   S.redraw_grid()
 
   engine.start_sequencer()
-  S.redraw_screen()
+  splash.start() -- draws the first frame
 end
 
 function cleanup()
+  splash.free()
   input.free_timers()
   leds.stop_blink()
   if S.pad then

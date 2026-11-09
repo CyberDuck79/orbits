@@ -2,7 +2,7 @@
 --
 --   lua tools/render.lua <root> <scenes.lua> <out-dir>
 --
--- <root> is the directory that contains the `lp3seq/` folder. The script runs
+-- <root> is the directory that contains the `orbits/` folder. The script runs
 -- for real against stubbed norns/lp3 APIs; the LED buffer it produces for each
 -- scene (see scenes.lua) is drawn as SVG, so the pictures always match what
 -- the code does. The screen pictures are real norns screenshots instead (see
@@ -23,6 +23,7 @@ metro = {
   free = function() end,
 }
 util = {
+  time = function() return 0 end,
   clamp = function(x, lo, hi) return math.min(math.max(x, lo), hi) end,
   file_exists = function() return false end,
 }
@@ -54,12 +55,12 @@ function include(file)
   if file:find("lib/nb/lib/nb", 1, true) then return nb_stub end
   return dofile(root .. "/" .. file .. ".lua")
 end
-dofile(root .. "/lp3seq/lp3seq.lua")
+dofile(root .. "/orbits/orbits.lua")
 init()
 
-local S = require 'lp3seq/lib/state'
-local consts = require 'lp3seq/lib/consts'
-local modulation = require 'lp3seq/lib/modulation'
+local S = require 'orbits/lib/state'
+local consts = require 'orbits/lib/consts'
+local modulation = require 'orbits/lib/modulation'
 local scenes = dofile(scenes_file)(S, consts, modulation)
 
 -- ------------------------------------------------------------ SVG utils ----

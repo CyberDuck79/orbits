@@ -1,25 +1,25 @@
 -- input: Launchpad pad handling: one handler per page, the arrow buttons, and
 -- `on_key` which routes everything.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local current_subpage, tracks = S.current_subpage, S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local DIVISIONS_OTHER, DIVISIONS_STRAIGHT = consts.DIVISIONS_OTHER, consts.DIVISIONS_STRAIGHT
 local NATURAL_OFFSETS, REPEATS_VALUES = consts.NATURAL_OFFSETS, consts.REPEATS_VALUES
 local SHARP_OFFSETS = consts.SHARP_OFFSETS
-local theory = require 'lp3seq/lib/theory'
+local theory = require 'orbits/lib/theory'
 local shift_octave_view, snap_notes_to_scale = theory.shift_octave_view, theory.snap_notes_to_scale
 local toggle_note, transpose_notes = theory.toggle_note, theory.transpose_notes
 local view_root = theory.view_root
-local modulation = require 'lp3seq/lib/modulation'
+local modulation = require 'orbits/lib/modulation'
 local USER_SLIDERS = modulation.USER_SLIDERS
-local patterns = require 'lp3seq/lib/patterns'
+local patterns = require 'orbits/lib/patterns'
 local apply_pattern, capture_pattern = patterns.apply_pattern, patterns.capture_pattern
 local deep_copy, duplicate_pattern_to = patterns.deep_copy, patterns.duplicate_pattern_to
 local queue_pattern_switch = patterns.queue_pattern_switch
-local engine = require 'lp3seq/lib/engine'
+local engine = require 'orbits/lib/engine'
 local toggle_play = engine.toggle_play
-local pages = require 'lp3seq/lib/pages'
+local pages = require 'orbits/lib/pages'
 local close_temp_page, select_subpage = pages.close_temp_page, pages.select_subpage
 local open_temp_page, switch_page = pages.open_temp_page, pages.switch_page
 

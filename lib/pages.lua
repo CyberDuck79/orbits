@@ -1,16 +1,16 @@
 -- pages: Screen sub-pages and held temporary pages: what E2/K2/E3/K3 do on
 -- each page, plus page navigation.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local current_subpage, tracks = S.current_subpage, S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local GROOVE_LENGTHS = consts.GROOVE_LENGTHS
-local steps = require 'lp3seq/lib/steps'
+local steps = require 'orbits/lib/steps'
 local pulse_index_map, set_step_microtiming = steps.pulse_index_map, steps.set_step_microtiming
 local set_step_probability, step_accent = steps.set_step_probability, steps.step_accent
 local step_microtiming, step_probability = steps.step_microtiming, steps.step_probability
 local toggle_manual_step, toggle_step_accent = steps.toggle_manual_step, steps.toggle_step_accent
-local modulation = require 'lp3seq/lib/modulation'
+local modulation = require 'orbits/lib/modulation'
 local RATE_STEPS, USER_SLIDERS = modulation.RATE_STEPS, modulation.USER_SLIDERS
 local focused_state, fresh_random_seq = modulation.focused_state, modulation.fresh_random_seq
 local set_modulation_enabled = modulation.set_modulation_enabled

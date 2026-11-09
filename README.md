@@ -1,4 +1,4 @@
-# lp3seq
+# orbits
 
 A 7-track **Euclidean sequencer** for [norns](https://monome.org/docs/norns/), played from a **Novation Launchpad Mini MK3**.
 
@@ -6,7 +6,7 @@ Every track has its own length, density, rotation and clock division, so tracks 
 
 The Launchpad is where you play; the norns screen and encoders hold the fine adjustments.
 
-![The Launchpad running lp3seq](docs/img/pad-overview.svg)
+![The Launchpad running orbits](docs/img/pad-overview.svg)
 
 - [Requirements and install](#requirements-and-install)
 - [Quick start](#quick-start)
@@ -34,16 +34,16 @@ The Launchpad is where you play; the norns screen and encoders hold the fine adj
   Then enable **LP3** in **SYSTEM > MODS** and restart the norns.
 - A sound source for each track: an external instrument on a MIDI port is enough, nothing else to install. If you want internal synths, install [nb](https://github.com/sixolet/nb) voice mods too. See [Voices and MIDI](#voices-and-midi).
 
-Install lp3seq itself by cloning this repository into the norns' script folder, so that the script ends up in `~/dust/code/lp3seq`:
+Install orbits itself by cloning this repository into the norns' script folder, so that the script ends up in `~/dust/code/orbits`:
 
 ```
 cd ~/dust/code
-git clone <this repository> lp3seq
+git clone <this repository> orbits
 ```
 
 ## Quick start
 
-1. Load **lp3seq**. The Launchpad lights up on the **Drums** page.
+1. Load **orbits**. The Launchpad lights up on the **Drums** page.
 2. Open **PARAMETERS** and give each track a voice with **T1 OUTPUT … T7 OUTPUT**. A track with no voice is silent.
 3. On the Drums page, track 1 is selected (right column, top button). Press the **play** button (bottom of the right column) to start.
 4. Change the rhythm: the **↑ ↓** buttons add or remove pulses, **← →** rotate the pattern.
@@ -275,13 +275,13 @@ The chain plays patterns in order, on its own for each track.
 
 ## Saving
 
-lp3seq saves with the norns **PSET** system (**PARAMETERS > PSET**). A pset keeps the voice of each track, the tempo, **all patterns** of the 7 tracks, the song chains and the quantize settings. It writes an extra file `<pset>.lp3seqdata` next to the pset; keep the two together.
+orbits saves with the norns **PSET** system (**PARAMETERS > PSET**). A pset keeps the voice of each track, the tempo, **all patterns** of the 7 tracks, the song chains and the quantize settings. It writes an extra file `<pset>.orbitsdata` next to the pset; keep the two together.
 
 What is not saved: the current page, the selected track and mutes.
 
 ## Voices and MIDI
 
-Each track sends its notes to a voice, chosen in **PARAMETERS** with **T1 OUTPUT … T7 OUTPUT**. The voice system is [nb](https://github.com/sixolet/nb), and lp3seq bundles it: you do not need to install it.
+Each track sends its notes to a voice, chosen in **PARAMETERS** with **T1 OUTPUT … T7 OUTPUT**. The voice system is [nb](https://github.com/sixolet/nb), and orbits bundles it: you do not need to install it.
 
 - **MIDI**: every connected MIDI port appears as a voice, named `midi: <port> <n>`, with its channel, modulation CC and bend range in the parameters. This works out of the box.
 - **Internal synths**: any [nb](https://github.com/sixolet/nb) voice mod you have installed shows up in the same list.
@@ -318,7 +318,7 @@ The default division is 1/16, the default pattern is 4 pulses on 8 steps, the de
 
 ## Troubleshooting
 
-- **A cross (✕) at the top of the screen, between the page name and the sub-page name** (see below): the Launchpad is not connected. Plug it in; lp3seq connects as soon as it appears. If it never does, check that the **LP3** mod is enabled in **SYSTEM > MODS** and that you restarted the norns after enabling it.
+- **A cross (✕) at the top of the screen, between the page name and the sub-page name** (see below): the Launchpad is not connected. Plug it in; orbits connects as soon as it appears. If it never does, check that the **LP3** mod is enabled in **SYSTEM > MODS** and that you restarted the norns after enabling it.
 
   ![Launchpad not connected](docs/img/screen-disconnected.png)
 

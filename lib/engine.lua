@@ -2,20 +2,20 @@
 -- with repeats and arp bursts, the groove clock that drives pattern switching
 -- and the song chain, the logo beat, transport.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local ALL_DIVISIONS, NUM_TRACKS = consts.ALL_DIVISIONS, consts.NUM_TRACKS
-local theory = require 'lp3seq/lib/theory'
+local theory = require 'orbits/lib/theory'
 local apply_phrase, arp_sequence = theory.apply_phrase, theory.arp_sequence
 local groove_curve_value, round = theory.groove_curve_value, theory.round
-local steps = require 'lp3seq/lib/steps'
+local steps = require 'orbits/lib/steps'
 local step_accent, step_active = steps.step_accent, steps.step_active
 local step_microtiming, step_probability = steps.step_microtiming, steps.step_probability
 local track_muted = steps.track_muted
-local modulation = require 'lp3seq/lib/modulation'
+local modulation = require 'orbits/lib/modulation'
 local random_tick = modulation.random_tick
-local patterns = require 'lp3seq/lib/patterns'
+local patterns = require 'orbits/lib/patterns'
 local do_pattern_switch = patterns.do_pattern_switch
 
 local function toggle_play()

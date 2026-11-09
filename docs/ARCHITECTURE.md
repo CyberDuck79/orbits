@@ -1,4 +1,4 @@
-# lp3seq: technical documentation
+# orbits: technical documentation
 
 A 7-track Euclidean sequencer for norns, played from a Novation Launchpad Mini MK3 through the `lp3` mod. Notes go out through `nb` (one voice per track). Any `nb` player can be assigned to a track: internal synths and engines, but also external MIDI devices, since `nb` exposes every connected MIDI port as a player (channel, modulation CC and bend range are set in its params).
 
@@ -32,7 +32,7 @@ Three ideas shape the whole script:
 ## 2. File layout
 
 ```
-lp3seq.lua            entry point: wiring, init(), cleanup()
+orbits.lua            entry point: wiring, init(), cleanup()
 lib/
   colors.lua          RGB palette, brighten / scale_color
   consts.lua          constants and data tables (divisions, scales, grooves…)
@@ -130,7 +130,7 @@ At every step: `value = base + seq[pos] × (amount/127) × (hi−lo)/2`, clamped
 A pattern is a **snapshot** of the fields listed in `PATTERN_FIELDS` (rhythm, notes, velocities, repeats, groove, scale, arp, phrase, modulations). Neither the voice nor the mute is part of it. There is no "save" action: switching pattern first re-captures the active one into its slot. 32 slots per track (`trk.patterns`), and a 16-position song chain (`trk.song_chain`).
 
 ### Saving
-Patterns are not flat norns params. `install_persistence()` hooks `params.action_write` / `action_read` to write a sidecar file `<pset>.lp3seqdata` next to the `.pset` (the same technique n.kria uses). Tempo and voices go through the normal pset mechanism.
+Patterns are not flat norns params. `install_persistence()` hooks `params.action_write` / `action_read` to write a sidecar file `<pset>.orbitsdata` next to the `.pset` (the same technique n.kria uses). Tempo and voices go through the normal pset mechanism.
 
 ## 7. Interface
 
@@ -170,7 +170,7 @@ The harness only covers simulated I/O: it proves there is no regression, not tha
 
 ## 9. Known pitfalls
 
-- **`include` vs `require`.** `include` does not cache; `require` does. `lp3seq.lua` therefore purges the `package.loaded` entries starting with `lp3seq/` at startup, otherwise reloading the script would reuse stale modules.
+- **`include` vs `require`.** `include` does not cache; `require` does. `orbits.lua` therefore purges the `package.loaded` entries starting with `orbits/` at startup, otherwise reloading the script would reuse stale modules.
 - **Lua version.** norns (matron) runs Lua 5.3, the shell has 5.1/LuaJIT. Avoid what differs (integer operators, `//`) or check it on the device.
 - **Accidental globals.** Only `init`, `cleanup`, `enc`, `key`, `redraw` should be global. Check: `luac -l` (the shell's Lua 5.1) on each file; only `GETGLOBAL` accesses to the standard library and the norns APIs are normal.
 - **Screen drawing.** `screen.rect` is safe; `screen.circle` followed by `stroke` leaves stray lines (Cairo's current point). The round dots (`draw_round_dot`) are therefore made of three filled `rect`s, with no arc.
@@ -195,6 +195,6 @@ The harness only covers simulated I/O: it proves there is no regression, not tha
 | Change the page buttons, arrows, play/shift, mute | `input.lua` (`on_key`, `handle_arrow`) |
 | Change pattern switching or the song chain | `engine.lua` (`start_groove_clock`) and `patterns.lua` |
 | Change what gets saved | `patterns.lua` (`install_persistence`) |
-| Change init / cleanup | `lp3seq.lua` |
+| Change init / cleanup | `orbits.lua` |
 
 After any change: `sh tools/check.sh <ref>` (for a refactor), then `sh tools/deploy.sh` and a test on the hardware.

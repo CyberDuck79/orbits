@@ -1,9 +1,11 @@
 -- Takes the real norns screenshots of the README (run inside matron, see
 -- screenshots.sh): puts the loaded script in each scene of scenes.lua, redraws
--- it and exports the screen to ~/dust/data/lp3seq/shot_<scene>.png.
-local S = require 'lp3seq/lib/state'
-local consts = require 'lp3seq/lib/consts'
-local modulation = require 'lp3seq/lib/modulation'
+-- it and exports the screen to ~/dust/data/orbits/shot_<scene>.png.
+local S = require 'orbits/lib/state'
+local consts = require 'orbits/lib/consts'
+local modulation = require 'orbits/lib/modulation'
+local splash = require 'orbits/lib/splash'
+splash.stop() -- the start-up animation may still be up
 local scenes = dofile("/tmp/scenes.lua")(S, consts, modulation)
 
 local list = {
@@ -23,4 +25,7 @@ for _, name in ipairs(list) do
   screen.export_screenshot("shot_" .. name)
   if name == "screen_disconnected" then S.pad.connected = true end
 end
-print("lp3seq screenshots done")
+-- the end of the start-up animation
+splash.draw(3.6)
+screen.export_screenshot("shot_splash")
+print("orbits screenshots done")

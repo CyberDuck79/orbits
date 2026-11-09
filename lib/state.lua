@@ -5,7 +5,7 @@
 -- modules fill in when they load, so lower layers can ask for a redraw without
 -- requiring them.
 
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local BASE_NOTE, DEFAULT_DIVISION = consts.BASE_NOTE, consts.DEFAULT_DIVISION
 local DEFAULT_GROOVE_LENGTH_INDEX = consts.DEFAULT_GROOVE_LENGTH_INDEX
 local NUM_TRACKS = consts.NUM_TRACKS

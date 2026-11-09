@@ -1,14 +1,16 @@
 -- controls: The norns hardware: encoder and key handlers, dispatched to the
 -- current sub-page.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local current_subpage = S.current_subpage
-local pages = require 'lp3seq/lib/pages'
+local pages = require 'orbits/lib/pages'
 local current_subpage_def, slot_ready = pages.current_subpage_def, pages.slot_ready
 local step_locked = pages.step_locked
+local splash = require 'orbits/lib/splash'
 local subpages = pages.subpages
 
 local function enc(n, d)
+  if splash.active then return splash.stop() end -- any control ends the start-up animation
   if n == 1 then
     -- a temp page and the step page are single views; nothing to cycle
     if S.active_temp_page or step_locked() then return end
@@ -35,6 +37,10 @@ local function enc(n, d)
 end
 
 local function key(n, z)
+  if splash.active then
+    if z == 1 then splash.stop() end
+    return
+  end
   if n == 1 then return end -- K1 is unused
 
   if z ~= 1 then return end

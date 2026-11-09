@@ -1,9 +1,9 @@
 -- theory: Musical logic that only needs a track: note pool and scale snapping,
 -- groove and phrase curves, phrase application, arp note order.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local ARP_STYLES, BASE_NOTE, GROOVES = consts.ARP_STYLES, consts.BASE_NOTE, consts.GROOVES
 local GROOVE_LENGTHS, PERCUSSION_GROOVES = consts.GROOVE_LENGTHS, consts.PERCUSSION_GROOVES
 local PHRASE_RANDOM_WALK, PHRASE_TYPES = consts.PHRASE_RANDOM_WALK, consts.PHRASE_TYPES

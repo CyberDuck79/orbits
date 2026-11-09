@@ -1,17 +1,18 @@
 -- display: The OLED screen: icons and parameter widgets, and `redraw`.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local current_subpage, tracks = S.current_subpage, S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local ALL_DIVISIONS, ARP_STYLES, GROOVES = consts.ALL_DIVISIONS, consts.ARP_STYLES, consts.GROOVES
 local PC_NAMES, PHRASE_TYPES, SCALE_NAMES = consts.PC_NAMES, consts.PHRASE_TYPES, consts.SCALE_NAMES
 local div_label, repeats_label = consts.div_label, consts.repeats_label
-local modulation = require 'lp3seq/lib/modulation'
+local modulation = require 'orbits/lib/modulation'
 local USER_SLIDERS = modulation.USER_SLIDERS
-local pages = require 'lp3seq/lib/pages'
+local pages = require 'orbits/lib/pages'
 local current_subpage_def, slot_ready = pages.current_subpage_def, pages.slot_ready
 local step_locked = pages.step_locked
 local subpages = pages.subpages
+local splash = require 'orbits/lib/splash'
 
 -- small filled "dot" built only from rects (no arcs/circles: those leave a
 -- stray line from the prior current-point on this screen lib) -- a 4x4
@@ -83,6 +84,7 @@ local function redraw()
   -- the clocks and the pad call this constantly; while a system menu is open
   -- the screen belongs to it, and drawing here would make the two flicker
   if norns and norns.menu and norns.menu.status() then return end
+  if splash.active then return splash.redraw() end
   screen.clear()
   screen.level(15)
   screen.font_size(8)

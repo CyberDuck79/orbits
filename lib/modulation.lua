@@ -2,15 +2,15 @@
 -- fader definitions (range, accessors, colour), per-track modulation state,
 -- and the per-step tick that applies it.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local colors = require 'lp3seq/lib/colors'
+local colors = require 'orbits/lib/colors'
 local AMBER, GROOVE_SELECTED = colors.AMBER, colors.GROOVE_SELECTED
 local REPEATS_SELECTED, VELOCITY_COLOR = colors.REPEATS_SELECTED, colors.VELOCITY_COLOR
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local GROOVES, REPEATS_VALUES = consts.GROOVES, consts.REPEATS_VALUES
 local repeats_index, repeats_label = consts.repeats_index, consts.repeats_label
-local theory = require 'lp3seq/lib/theory'
+local theory = require 'orbits/lib/theory'
 local round = theory.round
 
 -- The User page is 8 faders, one per row, one per parameter that can be

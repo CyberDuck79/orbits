@@ -9,20 +9,20 @@ cd "$(dirname "$0")/.."
 sh tools/deploy.sh 2>/dev/null
 scp -q tools/repl.py tools/scenes.lua tools/screenshots.lua norns:/tmp/
 repl() { ssh norns "python3 /tmp/repl.py 5555 '$1' ${2:-2}"; }
-ssh norns 'rm -f ~/dust/data/lp3seq/shot_*.png'
-repl 'norns.script.load("/home/we/dust/code/lp3seq/lp3seq.lua")' 4
+ssh norns 'rm -f ~/dust/data/orbits/shot_*.png'
+repl 'norns.script.load("/home/we/dust/code/orbits/orbits.lua")' 4
 repl 'dofile("/tmp/screenshots.lua")' 4
 sleep 1
-repl 'norns.script.load("/home/we/dust/code/lp3seq/lp3seq.lua")' 3
-mkdir -p docs/img /tmp/lp3seq_shots
-rm -f /tmp/lp3seq_shots/*.png
-scp -q 'norns:dust/data/lp3seq/shot_*.png' /tmp/lp3seq_shots/
+repl 'norns.script.load("/home/we/dust/code/orbits/orbits.lua")' 3
+mkdir -p docs/img /tmp/orbits_shots
+rm -f /tmp/orbits_shots/*.png
+scp -q 'norns:dust/data/orbits/shot_*.png' /tmp/orbits_shots/
 python3 - <<'PY'
 import glob, os
 from PIL import Image
 # a norns screenshot is the 128x64 screen at 5x, centred on a black 640x384 canvas;
 # crop to the screen and add a thin frame so it stands out on a white page
-for f in sorted(glob.glob('/tmp/lp3seq_shots/shot_*.png')):
+for f in sorted(glob.glob('/tmp/orbits_shots/shot_*.png')):
     name = os.path.basename(f)[5:-4].replace('_', '-')
     im = Image.open(f).convert('RGB')
     w, h = im.size

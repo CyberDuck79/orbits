@@ -2,9 +2,9 @@
 -- shared columns (scenes, transport, top row) and `redraw_grid`, which also
 -- refreshes the screen.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local colors = require 'lp3seq/lib/colors'
+local colors = require 'orbits/lib/colors'
 local AMBER, ARP_SELECTED, CHAIN_STEP = colors.AMBER, colors.ARP_SELECTED, colors.CHAIN_STEP
 local CHAIN_STEP_ACTIVE, DIM = colors.CHAIN_STEP_ACTIVE, colors.DIM
 local DIVISION_SELECTED, GROOVE_SELECTED = colors.DIVISION_SELECTED, colors.GROOVE_SELECTED
@@ -13,16 +13,16 @@ local PATTERN_SAVED, PHRASE_SELECTED, RED = colors.PATTERN_SAVED, colors.PHRASE_
 local REPEATS_SELECTED, ROOT_COLOR = colors.REPEATS_SELECTED, colors.ROOT_COLOR
 local SCALE_SELECTED, brighten = colors.SCALE_SELECTED, colors.brighten
 local scale_color = colors.scale_color
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local DIVISIONS_OTHER, DIVISIONS_STRAIGHT = consts.DIVISIONS_OTHER, consts.DIVISIONS_STRAIGHT
 local NATURAL_OFFSETS, NUM_TRACKS = consts.NATURAL_OFFSETS, consts.NUM_TRACKS
 local REPEATS_VALUES, SHARP_OFFSETS = consts.REPEATS_VALUES, consts.SHARP_OFFSETS
-local theory = require 'lp3seq/lib/theory'
+local theory = require 'orbits/lib/theory'
 local note_in_scale, view_root = theory.note_in_scale, theory.view_root
-local steps = require 'lp3seq/lib/steps'
+local steps = require 'orbits/lib/steps'
 local STATE_COLOR, pulse_index_map = steps.STATE_COLOR, steps.pulse_index_map
 local step_accent, step_state = steps.step_accent, steps.step_state
-local modulation = require 'lp3seq/lib/modulation'
+local modulation = require 'orbits/lib/modulation'
 local USER_SLIDERS, lin_to_pad = modulation.USER_SLIDERS, modulation.lin_to_pad
 
 local function draw_drums_page()

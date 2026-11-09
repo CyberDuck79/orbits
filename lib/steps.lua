@@ -1,12 +1,12 @@
 -- steps: The step model of a track: Euclidean pattern with rotation, manual
 -- overrides, accent, per-step probability and micro-timing, mute state.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local colors = require 'lp3seq/lib/colors'
+local colors = require 'orbits/lib/colors'
 local AMBER, DIM, MANUAL = colors.AMBER, colors.DIM, colors.MANUAL
 
-local euclid = include('lp3seq/lib/euclid')
+local euclid = include('orbits/lib/euclid')
 
 local function track_pattern(t)
   local trk = tracks[t]

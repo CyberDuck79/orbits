@@ -1,9 +1,9 @@
 -- patterns: Pattern snapshots: capture / apply a track's state, switch
 -- (immediate or quantized), duplicate, and save/load them with the pset.
 
-local S = require 'lp3seq/lib/state'
+local S = require 'orbits/lib/state'
 local tracks = S.tracks
-local consts = require 'lp3seq/lib/consts'
+local consts = require 'orbits/lib/consts'
 local BASE_NOTE, DEFAULT_DIVISION = consts.BASE_NOTE, consts.DEFAULT_DIVISION
 local DEFAULT_GROOVE_LENGTH_INDEX = consts.DEFAULT_GROOVE_LENGTH_INDEX
 local NUM_TRACKS = consts.NUM_TRACKS
@@ -137,11 +137,11 @@ local function install_persistence()
         song_enabled = trk.song_enabled,
       }
     end
-    tab.save(data, filename .. ".lp3seqdata")
+    tab.save(data, filename .. ".orbitsdata")
   end
 
   params.action_read = function(filename, name, pset_number)
-    local patternfile = filename .. ".lp3seqdata"
+    local patternfile = filename .. ".orbitsdata"
     if util.file_exists(patternfile) then
       local data = tab.load(patternfile)
       if data then
