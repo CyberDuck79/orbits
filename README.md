@@ -52,6 +52,10 @@ git clone <this repository> orbits
 
 Pressing play again stops the sequencer and rewinds every track to its first step.
 
+When the script loads, the screen plays a short animation: seven rings, one per track, each with its own length, drift apart like orbits and snap back together before the name appears. The script is already running behind it; turn an encoder or press a key to skip it.
+
+![Start-up animation, last frames](docs/img/splash.png)
+
 ## How it is organised
 
 ### The Launchpad
