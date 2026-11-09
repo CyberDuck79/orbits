@@ -161,6 +161,7 @@ Redraw guard: `display.redraw()` does nothing while a norns system menu is open;
 
 - `deploy.sh`: copies the script to the norns (`ssh norns`).
 - `check.sh <git-ref> [seed]`: checks that a refactor changes nothing. It replays a long scripted session (pads, encoders, keys, virtual clock, stubbed norns APIs) on the old version and on the current folder, then compares the LEDs, screen calls and emitted notes **byte for byte**.
+- `render.sh` / `render.lua`: regenerate the README pictures (`docs/img/*.svg`) from the real code. Re-run after changing anything visible (colours, layouts, screen).
 - `harness.lua`: the test driver (deterministic randomness per seed, `COVER=1` for line coverage).
 
 The harness only covers simulated I/O: it proves there is no regression, not that the hardware works. It does not simulate the system menu either. An **intended** behaviour change makes the test diverge: that is expected, and the diff then has to be reviewed by hand.
