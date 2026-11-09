@@ -31,7 +31,8 @@ return function(S, consts, modulation)
   end
 
   -- Drums page, stopped: a 16-step pattern with an accent, a manual
-  -- step, repeats, two muted tracks. No playhead.
+  -- step, repeats, two muted tracks. The playhead (step 5) sits between pulses,
+  -- so it cannot be mistaken for an accent.
   function scenes.drums()
     reset()
     local trk = T[1]
@@ -44,6 +45,8 @@ return function(S, consts, modulation)
     trk.groove = 7
     T[3].mute = true
     T[5].mute = true
+    S.playing, trk.step = true, 4 -- playhead on step 5
+    S.logo_on = true
   end
 
   -- a step selected for editing (its pad is shown in the dim half of the blink)
