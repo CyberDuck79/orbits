@@ -17,8 +17,6 @@ local set_modulation_enabled = modulation.set_modulation_enabled
 
 local STEP_SUBPAGE = 1 -- index of the "step" sub-page within subpages.drums
 
--- ==== sub-pages (screen) ====
---
 -- Each grid page (drums/keys/user) has a list of sub-pages. E1 cycles
 -- through them; the grid never changes because of this, only the screen.
 -- Each sub-page independently assigns e2/k2/e3/k3, or leaves them nil.
@@ -235,8 +233,6 @@ local function switch_page(new_page)
   S.copy_mode_active = false
   S.redraw_grid()
 end
-
--- ==== norns hardware UI (screen + encoders/keys) ====
 
 -- a held temporary page takes over the controls; otherwise the current
 -- page's selected sub-page owns them

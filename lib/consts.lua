@@ -37,8 +37,8 @@ end
 -- Note Repeater: extra triggers layered on top of each active step, still
 -- following the track's own notes/velocity. Repeats = how many (0 = off,
 -- capped at 8 rather than the T1's 48 -- that's more than this needs).
--- Ramp/Pace reshape velocity/timing across the repeat series and live on
--- the "repeat shape" screen sub-page instead of the grid.
+-- Ramp/Pace reshape velocity/timing across the repeat series; they live on
+-- the "repeat" screen sub-page (and as faders on the User page).
 local REPEATS_VALUES = {0, 1, 2, 3, 4, 5, 6, 7}
 
 local function repeats_label(n)

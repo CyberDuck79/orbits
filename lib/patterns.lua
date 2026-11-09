@@ -1,14 +1,13 @@
 -- patterns: Pattern snapshots: capture / apply a track's state, switch
--- (immediate or quantized), duplicate.
+-- (immediate or quantized), duplicate, and save/load them with the pset.
 
 local S = require 'lp3seq/lib/state'
 local tracks = S.tracks
 local consts = require 'lp3seq/lib/consts'
 local BASE_NOTE, DEFAULT_DIVISION = consts.BASE_NOTE, consts.DEFAULT_DIVISION
 local DEFAULT_GROOVE_LENGTH_INDEX = consts.DEFAULT_GROOVE_LENGTH_INDEX
+local NUM_TRACKS = consts.NUM_TRACKS
 
--- ==== session: patterns ====
---
 -- A pattern is a snapshot of everything that shapes a track's rhythm/melody
 -- -- not its identity (voice) or live performance state (mute).
 
@@ -103,11 +102,76 @@ local function duplicate_pattern_to(t, slot)
   queue_pattern_switch(t, slot)
 end
 
+-- slot 1 starts out holding each track's default state, so Session isn't
+-- blank on first use and there's always something to fall back to
+local function init_slots()
+  for t = 1, NUM_TRACKS do
+    tracks[t].patterns[1] = capture_pattern(t)
+    tracks[t].current_pattern = 1
+  end
+end
+
+-- Patterns/chains live outside the params system (they're not flat
+-- scalars pset can serialize), so PSET SAVE/LOAD gets a sidecar file
+-- alongside the .pset, the same technique n.kria uses for its own
+-- pattern data. Tempo and voice assignments still go through the normal
+-- params/pset mechanism untouched.
+local function install_persistence()
+  params.action_write = function(filename, name, pset_number)
+    -- sync each track's live edits into its active slot first, so a save
+    -- never loses whatever you were in the middle of doing
+    for t = 1, NUM_TRACKS do
+      local trk = tracks[t]
+      if trk.current_pattern then
+        trk.patterns[trk.current_pattern] = capture_pattern(t)
+      end
+    end
+    local data = {}
+    for t = 1, NUM_TRACKS do
+      local trk = tracks[t]
+      data[t] = {
+        patterns = deep_copy(trk.patterns),
+        current_pattern = trk.current_pattern,
+        pattern_quantize = trk.pattern_quantize,
+        song_chain = deep_copy(trk.song_chain),
+        song_enabled = trk.song_enabled,
+      }
+    end
+    tab.save(data, filename .. ".lp3seqdata")
+  end
+
+  params.action_read = function(filename, name, pset_number)
+    local patternfile = filename .. ".lp3seqdata"
+    if util.file_exists(patternfile) then
+      local data = tab.load(patternfile)
+      if data then
+        for t = 1, NUM_TRACKS do
+          local d = data[t]
+          local trk = tracks[t]
+          if d then
+            trk.patterns = d.patterns or {}
+            trk.current_pattern = d.current_pattern
+            trk.pattern_quantize = d.pattern_quantize or 8
+            trk.song_chain = d.song_chain or {}
+            trk.song_enabled = d.song_enabled or false
+            if trk.current_pattern and trk.patterns[trk.current_pattern] then
+              apply_pattern(t, trk.patterns[trk.current_pattern])
+            end
+          end
+        end
+      end
+    end
+    S.redraw_grid()
+  end
+end
+
 return {
   apply_pattern = apply_pattern,
   capture_pattern = capture_pattern,
   deep_copy = deep_copy,
   do_pattern_switch = do_pattern_switch,
   duplicate_pattern_to = duplicate_pattern_to,
+  init_slots = init_slots,
+  install_persistence = install_persistence,
   queue_pattern_switch = queue_pattern_switch,
 }

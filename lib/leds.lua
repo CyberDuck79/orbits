@@ -25,8 +25,6 @@ local step_accent, step_state = steps.step_accent, steps.step_state
 local modulation = require 'lp3seq/lib/modulation'
 local USER_SLIDERS, lin_to_pad = modulation.USER_SLIDERS, modulation.lin_to_pad
 
--- ==== grid drawing ====
-
 local function draw_drums_page()
   local trk = tracks[S.selected_track]
   local playhead = (S.playing and trk.length > 0) and ((trk.step % trk.length) + 1) or nil
@@ -333,5 +331,32 @@ end
 
 S.redraw_grid = redraw_grid
 
+-- Blink clock: toggles S.pulse_phase every 250 ms (selected step, armed copy
+-- mode, pending patterns, the selected fader... pulse with it) and redraws
+-- the grid only when something on it is actually blinking.
+local function start_blink()
+  S.pulse_metro = metro.init(function()
+    S.pulse_phase = not S.pulse_phase
+    local needs_redraw = S.selected_step ~= nil or S.copy_mode_active or S.chain_edit_pos ~= nil
+      or (S.page == "user" and S.last_slider ~= nil)
+    if not needs_redraw then
+      for t = 1, NUM_TRACKS do
+        if tracks[t].momentary_mute or tracks[t].pending_pattern then
+          needs_redraw = true
+          break
+        end
+      end
+    end
+    if needs_redraw then S.redraw_grid() end
+  end, 0.25)
+  S.pulse_metro:start()
+end
+
+local function stop_blink()
+  if S.pulse_metro then metro.free(S.pulse_metro.id) end
+end
+
 return {
+  start_blink = start_blink,
+  stop_blink = stop_blink,
 }

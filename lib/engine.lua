@@ -31,8 +31,6 @@ local function toggle_play()
   S.redraw_grid()
 end
 
--- ==== sequencer ====
-
 -- Note Repeater: `repeats` extra triggers after the initial hit, spaced by
 -- `repeat_time`. `ramp` (-63..63) shapes velocity rising/falling across the
 -- series; `pace` (-63..63) shapes the spacing speeding up/slowing down.

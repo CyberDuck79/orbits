@@ -23,8 +23,6 @@ local pages = require 'lp3seq/lib/pages'
 local STEP_SUBPAGE, close_temp_page = pages.STEP_SUBPAGE, pages.close_temp_page
 local open_temp_page, switch_page = pages.open_temp_page, pages.switch_page
 
--- ==== interactions ====
-
 local function select_track(t)
   S.selected_track = t
   S.redraw_grid()
@@ -366,6 +364,21 @@ local function on_key(x, y, z)
   end
 end
 
+-- One-shot timers used to tell a tap from a long press: `hold_metro` for
+-- steps and pattern slots, `mute_hold_metro` for shift + scene button. Their
+-- `event` is set per press (see the handlers above).
+local function create_timers()
+  S.hold_metro = metro.init(function() end, 0.45, 1)
+  S.mute_hold_metro = metro.init(function() end, 0.3, 1)
+end
+
+local function free_timers()
+  if S.hold_metro then metro.free(S.hold_metro.id) end
+  if S.mute_hold_metro then metro.free(S.mute_hold_metro.id) end
+end
+
 return {
+  create_timers = create_timers,
+  free_timers = free_timers,
   on_key = on_key,
 }

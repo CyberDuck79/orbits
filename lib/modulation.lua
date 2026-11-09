@@ -13,8 +13,6 @@ local repeats_index, repeats_label = consts.repeats_index, consts.repeats_label
 local theory = require 'lp3seq/lib/theory'
 local round = theory.round
 
--- ==== user page: modulation faders ====
---
 -- The User page is 8 faders, one per row, one per parameter that can be
 -- randomly modulated. Touching a pad only *selects* that row (which pad
 -- within the row doesn't matter); E2/K2/E3/K3 then configure its modulation.

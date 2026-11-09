@@ -88,11 +88,11 @@ function S.init_tracks()
       phrase_type = 1, -- index into PHRASE_TYPES
       phrase_range = 0, -- 0-127: how far the phrase contour shifts pitch (0 = none, 127 = up to an octave)
 
-      -- random_states[target_id] = {enabled, amount, rate_index, seq, pos,
-      -- step_counter, base}: each target keeps its own settings, so
-      -- switching the K1 focus between parameters doesn't disturb them, and
-      -- more than one can run at once even though only the focused one is
-      -- shown on E2/K2/E3/K3.
+      -- random_states[fader id] = {enabled, amount, rate_index, seq, pos,
+      -- step_counter, base, last}: each fader keeps its own modulation, so
+      -- selecting another fader on the User page doesn't disturb it, and
+      -- several can run at once even though only the selected one is shown
+      -- on E2/K2/E3/K3 (see modulation.lua).
       random_states = {},
 
       patterns = {}, -- patterns[1..32] = a captured snapshot (see PATTERN_FIELDS), or nil if unused
