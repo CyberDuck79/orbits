@@ -160,7 +160,7 @@ The Drums page has one exception: its **step** sub-page is not in the `subpages.
 
 `controls.lua` knows no page: it calls the slot of the current sub-page (`current_subpage_def()`) if `slot_ready` (present and `available()` true). `display.lua` draws the same slots, so what you see is what you control. **Temporary pages** (`temp_pages`, currently only "tempo") follow the same contract and replace the sub-page while their button is held.
 
-Redraw guards: `display.redraw()` does nothing while a norns system menu is open (otherwise the clocks would overwrite the menu's screen). While the start-up animation is up (`splash.active`), it draws the animation frame instead: `splash.start()` runs a 30 fps metro that calls `S.redraw_screen()`, and any encoder or key stops it (`controls.lua`). The animation is a pure function of the time, so `tools/screenshots.sh` can render any frame.
+Redraw guards: `display.redraw()` does nothing while a norns system menu is open (otherwise the clocks would overwrite the menu's screen). While the start-up animation is up (`splash.active`), it draws the animation frame instead: `splash.start()` runs a 30 fps metro that calls `S.redraw_screen()`, and any encoder or key stops it (`controls.lua`). The animation is a pure function of the time.
 
 ## 8. Tools and tests (`tools/`)
 
