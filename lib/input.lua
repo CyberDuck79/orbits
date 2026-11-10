@@ -218,7 +218,9 @@ local function handle_session_key(x, y, z)
 
   if y == 8 or y == 7 then -- quantize: same layout as Drums' division rows
     if z == 1 then
-      tracks[S.selected_track].pattern_quantize = (y == 8) and x or (x + 8)
+      local trk = tracks[S.selected_track]
+      local value = (y == 8) and x or (x + 8)
+      if trk.song_enabled then trk.song_length = value else trk.quantize = value end
       S.redraw_grid()
     end
     return
@@ -244,7 +246,10 @@ local function handle_session_key(x, y, z)
         -- short tap: didn't reach the long-press threshold
         S.hold_metro:stop()
         S.session_hold_pending = nil
-        queue_pattern_switch(S.selected_track, slot)
+        -- in song mode the chain decides which pattern plays: a tap does nothing
+        if not tracks[S.selected_track].song_enabled then
+          queue_pattern_switch(S.selected_track, slot)
+        end
       end
     end
     return

@@ -104,7 +104,10 @@ function S.init_tracks()
       patterns = {}, -- patterns[1..32] = a captured snapshot (see PATTERN_FIELDS), or nil if unused
       current_pattern = nil, -- slot currently loaded
       pending_pattern = nil, -- slot queued to load at the next quantize boundary
-      pattern_quantize = 8, -- index into ALL_DIVISIONS; defaults to the smallest (near-immediate)
+      -- when pattern changes happen, as a value 1..16 of consts.quant_label:
+      -- `quantize` for a pattern you tap, `song_length` for each part of the song chain
+      quantize = 1, -- 1/16: almost immediate
+      song_length = 4, -- 1/1: one bar per chain position
 
       -- song chain: a track-level arrangement (like voice/mute, not part of
       -- any one pattern) that auto-advances through pattern slots

@@ -3,9 +3,10 @@
 local S = require 'orbits/lib/state'
 local current_subpage, tracks = S.current_subpage, S.tracks
 local consts = require 'orbits/lib/consts'
-local ALL_DIVISIONS, ARP_STYLES, GROOVES = consts.ALL_DIVISIONS, consts.ARP_STYLES, consts.GROOVES
+local ARP_STYLES, GROOVES = consts.ARP_STYLES, consts.GROOVES
 local PC_NAMES, PHRASE_TYPES, SCALE_NAMES = consts.PC_NAMES, consts.PHRASE_TYPES, consts.SCALE_NAMES
 local div_label, repeats_label = consts.div_label, consts.repeats_label
+local quant_label = consts.quant_label
 local modulation = require 'orbits/lib/modulation'
 local USER_SLIDERS = modulation.USER_SLIDERS
 local pages = require 'orbits/lib/pages'
@@ -286,7 +287,8 @@ local function redraw()
       -- a chain position is armed: say which pattern it holds
       song_value = S.chain_edit_pos .. " -> " .. (trk.song_chain[S.chain_edit_pos] or "--")
     end
-    param_idx(0, 48, 1, "quant", div_label(ALL_DIVISIONS[trk.pattern_quantize]), 2)
+    local song = trk.song_enabled
+    param_idx(0, 48, 1, song and "length" or "quant", quant_label(song and trk.song_length or trk.quantize), 2)
     param_idx(0, 60, 2, "pat", pat_value, 2)
     param_idx(64, 48, 3, "song", song_value, 2)
   end

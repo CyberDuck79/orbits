@@ -66,8 +66,8 @@
 <rect x="650" y="150" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
 <rect x="250" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
 <rect x="300" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
-<rect x="350" y="100" width="44" height="44" rx="7" fill="#00ffff" stroke="#00000040"/>
-<rect x="400" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
+<rect x="350" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
+<rect x="400" y="100" width="44" height="44" rx="7" fill="#00ffff" stroke="#00000040"/>
 <rect x="450" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
 <rect x="500" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
 <rect x="550" y="100" width="44" height="44" rx="7" fill="#494949" stroke="#00000040"/>
@@ -87,8 +87,8 @@
 <polygon points="365,72 377,65 377,79" fill="#0d0d10"/>
 <polygon points="429,72 417,65 417,79" fill="#0d0d10"/>
 <text x="232" y="226" fill="#e8e8ec" font-size="13" text-anchor="end">patterns 1–8</text>
-<text x="232" y="176" fill="#e8e8ec" font-size="13" text-anchor="end">quantize: 1/4. → 1/64t</text>
-<text x="232" y="126" fill="#e8e8ec" font-size="13" text-anchor="end">quantize: 1/1 → 1/128</text>
+<text x="232" y="176" fill="#e8e8ec" font-size="13" text-anchor="end">same, in pattern loops: 1× → 16×</text>
+<text x="232" y="126" fill="#e8e8ec" font-size="13" text-anchor="end">quantize / length: 1/16 → 16/1</text>
 <text x="232" y="376" fill="#e8e8ec" font-size="13" text-anchor="end">patterns 25–32</text>
 <text x="232" y="476" fill="#e8e8ec" font-size="13" text-anchor="end">song chain 9–16</text>
 <text x="232" y="326" fill="#e8e8ec" font-size="13" text-anchor="end">patterns 17–24</text>

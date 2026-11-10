@@ -194,7 +194,7 @@ scene("user", "pad-user.svg", {
 local SESSION_TOP = with_pages({[1] = "copy", [2] = "paste", [3] = "undo", [4] = "redo"})
 scene("session", "pad-session.svg", {
   left = {
-    [8] = "quantize: 1/1 → 1/128", [7] = "quantize: 1/4. → 1/64t",
+    [8] = "quantize / length: 1/16 → 16/1", [7] = "same, in pattern loops: 1× → 16×",
     [6] = "patterns 1–8", [5] = "patterns 9–16", [4] = "patterns 17–24", [3] = "patterns 25–32",
     [2] = "song chain 1–8", [1] = "song chain 9–16",
   },

@@ -191,6 +191,7 @@ local subpages = {
         action = function()
           local trk = tracks[S.selected_track]
           trk.song_enabled = not trk.song_enabled
+          trk.pending_pattern = nil -- the chain decides now
         end,
       },
     },

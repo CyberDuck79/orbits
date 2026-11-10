@@ -5,10 +5,11 @@
 local S = require 'orbits/lib/state'
 local tracks = S.tracks
 local consts = require 'orbits/lib/consts'
-local ALL_DIVISIONS, NUM_TRACKS = consts.ALL_DIVISIONS, consts.NUM_TRACKS
+local NUM_TRACKS = consts.NUM_TRACKS
+local QUANT_LOOPS, QUANT_SIXTEENTHS = consts.QUANT_LOOPS, consts.QUANT_SIXTEENTHS
 local theory = require 'orbits/lib/theory'
 local apply_phrase, arp_sequence = theory.apply_phrase, theory.arp_sequence
-local groove_curve_value, round = theory.groove_curve_value, theory.round
+local groove_curve_value = theory.groove_curve_value
 local steps = require 'orbits/lib/steps'
 local step_accent, step_active = steps.step_accent, steps.step_active
 local step_microtiming, step_probability = steps.step_microtiming, steps.step_probability
@@ -128,6 +129,38 @@ local function trigger_track(t, pos)
   trigger_repeats(t, notes_to_play, vel)
 end
 
+-- the value (1..16, see consts.quant_label) that currently decides when
+-- track t's pattern changes: the song length in song mode, else the quantize
+local function change_value(trk)
+  return trk.song_enabled and trk.song_length or trk.quantize
+end
+
+-- does the change due for track t apply now? True when the track has
+-- something to change to: song mode (the chain decides), or a tapped pattern
+local function change_pending(trk)
+  return trk.song_enabled or trk.pending_pattern ~= nil
+end
+
+-- makes the pattern change due for track t: the next position of the song
+-- chain (empty positions are skipped), or the pattern that was tapped
+local function change_pattern(t)
+  local trk = tracks[t]
+  if trk.song_enabled then
+    local start = trk.song_pos
+    for _ = 1, 16 do
+      trk.song_pos = (trk.song_pos % 16) + 1
+      if trk.song_chain[trk.song_pos] then
+        do_pattern_switch(t, trk.song_chain[trk.song_pos])
+        break
+      end
+      if trk.song_pos == start then break end -- chain is empty
+    end
+  elseif trk.pending_pattern then
+    do_pattern_switch(t, trk.pending_pattern)
+  end
+  if t == S.selected_track then S.redraw_grid() end
+end
+
 -- one coroutine per track, each free-running at that track's own division --
 -- this is what makes per-track polymeter/polyrhythm possible.
 local function start_track_sequencer(t)
@@ -138,6 +171,14 @@ local function start_track_sequencer(t)
         local trk = tracks[t]
         random_tick(t)
         if not track_muted(t) and trk.length > 0 then
+          -- a change measured in loops of this pattern is due when a whole
+          -- number of those loops is done (the new pattern then starts on
+          -- this very tick). Held while the track is muted, as its step is.
+          local v = change_value(trk)
+          if v > 8 and change_pending(trk) and trk.step > 0 and trk.step % trk.length == 0
+              and math.floor(trk.step / trk.length) % QUANT_LOOPS[v - 8] == 0 then
+            change_pattern(t)
+          end
           local pos = (trk.step % trk.length) + 1
           if step_active(t, pos) and math.random(100) <= step_probability(t, pos) then
             local micro = step_microtiming(t, pos)
@@ -185,31 +226,15 @@ local function start_groove_clock()
       if S.playing then
         S.groove_pos = S.groove_pos + 1
 
-        -- quantized pattern switches (and song-chain advances): checked
-        -- here (a shared, always-on 16th note clock) so "next bar" means
-        -- the same musical moment for every track, regardless of each
-        -- track's own division. Song mode takes priority over a manually
-        -- queued switch -- it drives what plays as long as it's on.
+        -- pattern changes measured in bars: checked here (a shared, always-on
+        -- 16th note clock) so "next bar" means the same musical moment for
+        -- every track, whatever its own division. Changes measured in loops
+        -- of the track's pattern are made by the track itself, see below.
         for t = 1, NUM_TRACKS do
           local trk = tracks[t]
-          if trk.song_enabled or trk.pending_pattern then
-            local steps16 = math.max(1, round(ALL_DIVISIONS[trk.pattern_quantize] * 4))
-            if S.groove_pos % steps16 == 0 then
-              if trk.song_enabled then
-                local start = trk.song_pos
-                for _ = 1, 16 do
-                  trk.song_pos = (trk.song_pos % 16) + 1
-                  if trk.song_chain[trk.song_pos] then
-                    do_pattern_switch(t, trk.song_chain[trk.song_pos])
-                    break
-                  end
-                  if trk.song_pos == start then break end -- chain is empty
-                end
-              else
-                do_pattern_switch(t, trk.pending_pattern)
-              end
-              if t == S.selected_track then S.redraw_grid() end
-            end
+          local v = change_value(trk)
+          if change_pending(trk) and v <= 8 and S.groove_pos % QUANT_SIXTEENTHS[v] == 0 then
+            change_pattern(t)
           end
         end
       end

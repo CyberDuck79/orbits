@@ -122,6 +122,21 @@ local function division_index(d)
   return 1
 end
 
+-- Session page: how far apart pattern changes are. One setting per track and
+-- mode (live "quantize", song "length"), 16 values on two pad rows: the first
+-- row in bars of the shared clock (the numbers are 16th notes, labelled like
+-- the note values of the division rows), the second in loops of the track's
+-- own pattern.
+local QUANT_SIXTEENTHS = {1, 4, 8, 16, 32, 64, 128, 256}
+local QUANT_LABELS = {"1/16", "1/4", "1/2", "1/1", "2/1", "4/1", "8/1", "16/1"}
+local QUANT_LOOPS = {1, 2, 3, 4, 6, 8, 12, 16}
+
+-- label of a value 1..16
+local function quant_label(i)
+  if i <= 8 then return QUANT_LABELS[i] end
+  return QUANT_LOOPS[i - 8] .. "x"
+end
+
 local function repeats_index(n)
   for i, v in ipairs(REPEATS_VALUES) do
     if v == n then return i end
@@ -142,6 +157,8 @@ return {
   NATURAL_OFFSETS = NATURAL_OFFSETS,
   NUM_TRACKS = NUM_TRACKS,
   PC_NAMES = PC_NAMES,
+  QUANT_LOOPS = QUANT_LOOPS,
+  QUANT_SIXTEENTHS = QUANT_SIXTEENTHS,
   PERCUSSION_GROOVES = PERCUSSION_GROOVES,
   PHRASE_RANDOM_WALK = PHRASE_RANDOM_WALK,
   PHRASE_TYPES = PHRASE_TYPES,
@@ -150,6 +167,7 @@ return {
   SCALE_NAMES = SCALE_NAMES,
   SHARP_OFFSETS = SHARP_OFFSETS,
   div_label = div_label,
+  quant_label = quant_label,
   repeats_index = repeats_index,
   repeats_label = repeats_label,
 }

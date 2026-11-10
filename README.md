@@ -228,7 +228,7 @@ There is no *save* button: the active pattern always follows what you do, and sw
 
 | Rows | What they are |
 |---|---|
-| Quantize (two rows) | When a queued pattern change happens: 1/1 = at the next bar … down to 1/128 (default, practically immediate). Same layout as the division rows |
+| Quantize / length (two rows) | When patterns change (see [below](#when-patterns-change)): bars on the top row, loops of the pattern on the second |
 | Patterns 1–32 (four rows) | Dim green = has content, bright green = loaded |
 | Song chain (two rows) | 16 positions |
 
@@ -243,7 +243,7 @@ There is no *save* button: the active pattern always follows what you do, and sw
 
 ### Switching patterns
 
-**Tap a pattern** to switch to it (an empty slot starts a blank pattern). While playing, the change waits for the quantize boundary and the pad blinks until then. When stopped, it is immediate.
+**Tap a pattern** to switch to it (an empty slot starts a blank pattern). While playing, the change waits for the next **quantize** boundary and the pad blinks until then. When stopped, it is immediate. Tapping the pattern that is already loaded does nothing, and in song mode tapping a pattern does nothing either: the chain decides.
 
 ### Copy, paste, delete
 
@@ -270,7 +270,29 @@ The chain plays patterns in order, on its own for each track.
 - **Tap a chain position** to arm it (it blinks white), then **tap a pattern** to put it there. If the position already holds a pattern, that pattern's pad pulses white while the position is armed, so you can see what is there.
 - **Hold a chain position** to clear it.
 - Both can be undone with ◀.
-- **K2 `song`** turns the chain on. It then advances through the filled positions at each quantize boundary, skipping empty ones, and goes round the 16 positions in a loop. Gaps are fine, and so is filling only the second row; a pattern you want to last longer goes on several positions. An empty chain does nothing. The playing position is bright yellow.
+- **K2 `song`** turns the chain on. It then advances through the filled positions, skipping empty ones, and goes round the 16 positions in a loop. Each position lasts the song's **length** (see below). Gaps are fine, and so is filling only the second row. An empty chain does nothing. The playing position is bright yellow.
+- A pattern that appears twice in a row keeps playing, it is not restarted. To make a part last longer, put the same pattern on several positions.
+
+### When patterns change
+
+The two rows below the top of the Session page set **when** patterns change. It is one setting with two uses, and the pads follow the mode:
+
+| Mode | The setting is called | It decides |
+|---|---|---|
+| Song **off** | `quant` (quantize) | When a pattern you tap takes effect |
+| Song **on** | `length` | How long each position of the song chain lasts |
+
+The two values are independent: each track remembers its own `quant` and its own `length`, and the same pads show whichever applies. The screen label changes with the mode.
+
+| Row | Unit | Values (left to right) |
+|---|---|---|
+| Top | Bars, on the clock shared by all tracks | `1/16` (one step), `1/4` (a beat), `1/2` (half a bar), `1/1` (one bar), `2/1`, `4/1`, `8/1`, `16/1` bars |
+| Second | **Loops of the track's own pattern** | `1x`, `2x`, `3x`, `4x`, `6x`, `8x`, `12x`, `16x` |
+
+- A value in **bars** keeps all tracks on the same bar lines, whatever their lengths.
+- A value in **loops** waits for the track's pattern to finish a whole number of loops, so a pattern of 5 steps is never cut halfway. Each track changes at its own loop end. A muted track waits, since its pattern is paused.
+- Examples: with `quant 1/1`, a pattern you tap starts at the next bar. With song on and `length 2x`, each chain position plays its pattern twice, whatever its length.
+- Defaults: `quant 1/16` (almost immediate) and `length 1/1`.
 
 ## Playing: tracks, mute, tempo
 
@@ -285,7 +307,7 @@ The chain plays patterns in order, on its own for each track.
 
 ## Saving
 
-orbits saves with the norns **PSET** system (**PARAMETERS > PSET**). A pset keeps the voice of each track, the tempo, **all patterns** of the 7 tracks, the song chains and the quantize settings. It writes an extra file `<pset>.orbitsdata` next to the pset; keep the two together.
+orbits saves with the norns **PSET** system (**PARAMETERS > PSET**). A pset keeps the voice of each track, the tempo, **all patterns** of the 7 tracks, the song chains and the quantize and length settings. It writes an extra file `<pset>.orbitsdata` next to the pset; keep the two together.
 
 What is not saved: the current page, the selected track and mutes.
 

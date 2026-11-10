@@ -73,6 +73,12 @@ end
 -- blank pattern if the slot was empty.
 local function do_pattern_switch(t, slot)
   local trk = tracks[t]
+  if slot == trk.current_pattern then
+    -- already the loaded pattern (a chain that repeats it, say): leave it
+    -- playing, don't restart it
+    trk.pending_pattern = nil
+    return
+  end
   if trk.current_pattern then
     trk.patterns[trk.current_pattern] = capture_pattern(t)
   end
@@ -223,7 +229,8 @@ local function install_persistence()
       data[t] = {
         patterns = deep_copy(trk.patterns),
         current_pattern = trk.current_pattern,
-        pattern_quantize = trk.pattern_quantize,
+        quantize = trk.quantize,
+        song_length = trk.song_length,
         song_chain = deep_copy(trk.song_chain),
         song_enabled = trk.song_enabled,
       }
@@ -242,7 +249,10 @@ local function install_persistence()
           if d then
             trk.patterns = d.patterns or {}
             trk.current_pattern = d.current_pattern
-            trk.pattern_quantize = d.pattern_quantize or 8
+            -- older saves have `pattern_quantize`, an index into the division list
+            local legacy = {[1] = 4, [2] = 3, [3] = 2}
+            trk.quantize = d.quantize or legacy[d.pattern_quantize] or 1
+            trk.song_length = d.song_length or 4
             trk.song_chain = d.song_chain or {}
             trk.song_enabled = d.song_enabled or false
             trk.history = {undo = {}, redo = {}} -- entries refer to the data just replaced

@@ -204,13 +204,15 @@ end
 local function draw_session_page()
   local trk = tracks[S.selected_track]
 
-  -- quantize rows: same two lists and layout as the Drums division rows
+  -- when pattern changes happen: the song's length in song mode, else the
+  -- quantize. Bars on the top row, loops of the track's pattern below.
+  local change_value = trk.song_enabled and trk.song_length or trk.quantize
   for x = 1, 8 do
-    local c = (trk.pattern_quantize == x) and DIVISION_SELECTED or DIM
+    local c = (change_value == x) and DIVISION_SELECTED or DIM
     S.pad:led_rgb(x, 8, c[1], c[2], c[3])
   end
   for x = 1, 8 do
-    local c = (trk.pattern_quantize == x + 8) and DIVISION_SELECTED or DIM
+    local c = (change_value == x + 8) and DIVISION_SELECTED or DIM
     S.pad:led_rgb(x, 7, c[1], c[2], c[3])
   end
 

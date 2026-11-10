@@ -111,7 +111,7 @@ All of them check `S.playing`. Stop does not kill the coroutines, it makes them 
 
 **Repeats** use `repeats`, `repeat_time`, `ramp` (velocity slope) and `pace` (acceleration). The arp reuses the same settings: there, `repeats` sets the number of notes in the burst.
 
-**Pattern switching** is deliberately done in `start_groove_clock`: a single always-on sixteenth-note clock guarantees that "next bar" means the same instant for every track, whatever its own division.
+**Pattern changes** (a tapped pattern, or the next position of the song chain) happen on a grid set per track by `trk.quantize` (live taps) or `trk.song_length` (song mode), a value 1..16 (see `consts.quant_label`). Values in bars are checked in `start_groove_clock`: a single always-on sixteenth-note clock guarantees that "next bar" means the same instant for every track, whatever its own division. Values in loops of the track's pattern are checked by the track's own coroutine (`start_track_sequencer`): the change is due when `step % length == 0` and the number of finished loops is a multiple of the setting, and the new pattern starts on that very tick. `change_pattern(t)` makes the change; `do_pattern_switch` does nothing when the pattern is already the loaded one, so a chain that repeats a pattern does not restart it.
 
 ## 6. Data models
 
@@ -167,6 +167,7 @@ Redraw guards: `display.redraw()` does nothing while a norns system menu is open
 - `deploy.sh`: copies the script to the norns (`ssh norns`).
 - `check.sh <git-ref> [seed]`: checks that a refactor changes nothing. It replays a long scripted session (pads, encoders, keys, virtual clock, stubbed norns APIs) on the old version and on the current folder, then compares the LEDs, screen calls and emitted notes **byte for byte**.
 - `render.sh` / `render.lua`: regenerate the README pictures (`docs/img/*.svg`) from the real code. Re-run after changing anything visible (colours, layouts, screen).
+- `behaviour.sh` / `behaviour.lua`: ok/FAIL checks of the pattern-change rules (quantize, song length, chain), on the harness's virtual clock. Run it after touching `engine.lua` or `patterns.lua`.
 - `harness.lua`: the test driver (deterministic randomness per seed, `COVER=1` for line coverage).
 
 The harness only covers simulated I/O: it proves there is no regression, not that the hardware works. It does not simulate the system menu either. An **intended** behaviour change makes the test diverge: that is expected, and the diff then has to be reviewed by hand.

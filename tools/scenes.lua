@@ -97,7 +97,7 @@ return function(S, consts, modulation)
     local s = T[1]
     for _, slot in ipairs({1, 2, 3, 5, 9, 12}) do s.patterns[slot] = {} end
     s.current_pattern, s.pending_pattern = 2, 3
-    s.pattern_quantize = 3
+    s.quantize = 4
     s.song_chain = {[1] = 1, [2] = 2, [3] = 2, [4] = 5}
     s.song_enabled, s.song_pos = true, 2
     S.clipboard = {snap = {}, track = 1, slot = 5} -- the copied pattern, shown while the paste arrow is held
