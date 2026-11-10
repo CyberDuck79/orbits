@@ -227,7 +227,17 @@ local function draw_session_page()
       else
         base = DIM
       end
-      if slot == trk.pending_pattern then
+      local armed = S.delete_armed
+      local source = S.clipboard
+      if armed and armed.track == S.selected_track and armed.slot == slot then
+        -- armed for deletion: red, pulsing (tap it again to delete)
+        local c = scale_color(RED, S.pulse_phase and 1.0 or 0.35)
+        S.pad:led_rgb(x, y, c[1], c[2], c[3])
+      elseif source and source.track == S.selected_track and source.slot == slot then
+        -- the pattern in the clipboard, pulsing white
+        local c = scale_color({127, 127, 127}, S.pulse_phase and 1.0 or 0.35)
+        S.pad:led_rgb(x, y, c[1], c[2], c[3])
+      elseif slot == trk.pending_pattern then
         local c = scale_color(PATTERN_ACTIVE, S.pulse_phase and 1.0 or 0.35)
         S.pad:led_rgb(x, y, c[1], c[2], c[3])
       else
@@ -283,7 +293,7 @@ local function draw_transport()
 end
 
 local function draw_top_row()
-  local arrows_active = S.page == "drums" or S.page == "keys"
+  local arrows_active = S.page == "drums" or S.page == "keys" or S.page == "session"
   for x = 1, 4 do
     if arrows_active then
       S.pad:led_rgb(x, 9, 20, 20, 20)
@@ -316,15 +326,6 @@ local function redraw_grid()
   draw_transport()
   draw_top_row()
 
-  if S.copy_mode_active and S.page == "session" and S.copy_mode_source.track == S.selected_track then
-    -- pulse the copy source pad so it's clear what the next tap will paste
-    local slot = S.copy_mode_source.slot
-    local sy = 6 - math.floor((slot - 1) / 8)
-    local sx = ((slot - 1) % 8) + 1
-    local c = scale_color({127, 127, 127}, S.pulse_phase and 1.0 or 0.35)
-    S.pad:led_rgb(sx, sy, c[1], c[2], c[3])
-  end
-
   S.pad:refresh()
   S.redraw_screen() -- keep the OLED screen in sync too
 end
@@ -344,7 +345,7 @@ local function start_blink()
     -- wrong until it changes. Resend everything every 2 s to heal that.
     ticks = ticks + 1
     if ticks % 8 == 0 and S.pad then S.pad:refresh(true) end
-    local needs_redraw = S.selected_step ~= nil or S.copy_mode_active or S.chain_edit_pos ~= nil
+    local needs_redraw = S.selected_step ~= nil or S.delete_armed ~= nil or S.clipboard ~= nil or S.chain_edit_pos ~= nil
       or (S.page == "user" and S.last_slider ~= nil)
     if not needs_redraw then
       for t = 1, NUM_TRACKS do

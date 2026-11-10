@@ -96,12 +96,98 @@ local function queue_pattern_switch(t, slot)
   S.redraw_grid()
 end
 
--- long-press shortcut: duplicates the currently active pattern into `slot`,
--- then switches to it -- a quick way to branch a variation without using
--- copy/paste for the common "start from what I have" case
-local function duplicate_pattern_to(t, slot)
-  tracks[t].patterns[slot] = capture_pattern(t) -- always the live state, never a possibly-stale save
-  queue_pattern_switch(t, slot)
+-- Session-page editing: copy / paste / delete a pattern slot and edit the song
+-- chain, each with undo and redo (HISTORY_DEPTH actions per track).
+
+local HISTORY_DEPTH = 16
+
+-- the content of a slot: the live state for the loaded pattern (what is
+-- stored for it may be stale), the stored snapshot for the others, nil if empty
+local function slot_content(t, slot)
+  local trk = tracks[t]
+  if slot == trk.current_pattern then return capture_pattern(t) end
+  return trk.patterns[slot] and deep_copy(trk.patterns[slot]) or nil
+end
+
+-- true when there is something in the slot (the loaded pattern always counts)
+local function slot_filled(t, slot)
+  return slot == tracks[t].current_pattern or tracks[t].patterns[slot] ~= nil
+end
+
+-- sets a slot's content (nil = empty), keeping the track in step when it is
+-- the loaded pattern: an emptied loaded pattern becomes a blank one
+local function put_slot(t, slot, snap)
+  local trk = tracks[t]
+  trk.patterns[slot] = snap and deep_copy(snap) or nil
+  if slot == trk.current_pattern then
+    apply_pattern(t, snap or fresh_pattern_snapshot())
+  end
+  if snap == nil and trk.pending_pattern == slot then trk.pending_pattern = nil end
+end
+
+local function push_history(t, entry)
+  local h = tracks[t].history
+  h.undo[#h.undo + 1] = entry
+  if #h.undo > HISTORY_DEPTH then table.remove(h.undo, 1) end
+  h.redo = {}
+end
+
+local function copy_pattern(t, slot)
+  local snap = slot_content(t, slot)
+  if not snap then return end
+  S.clipboard = {snap = snap, track = t, slot = slot}
+  S.redraw_grid()
+end
+
+local function paste_pattern(t, slot)
+  if not S.clipboard then return end
+  local before = slot_content(t, slot)
+  put_slot(t, slot, S.clipboard.snap)
+  push_history(t, {kind = "slot", slot = slot, before = before, after = deep_copy(S.clipboard.snap)})
+  S.redraw_grid()
+end
+
+local function delete_pattern(t, slot)
+  local before = slot_content(t, slot)
+  if not before then return end
+  put_slot(t, slot, nil)
+  push_history(t, {kind = "slot", slot = slot, before = before, after = nil})
+  S.redraw_grid()
+end
+
+-- sets (or clears, with nil) a position of the song chain
+local function set_chain(t, pos, slot)
+  local trk = tracks[t]
+  if trk.song_chain[pos] == slot then return end
+  push_history(t, {kind = "chain", pos = pos, before = trk.song_chain[pos], after = slot})
+  trk.song_chain[pos] = slot
+  S.redraw_grid()
+end
+
+local function apply_entry(t, entry, value_key)
+  if entry.kind == "slot" then
+    put_slot(t, entry.slot, entry[value_key])
+  else
+    tracks[t].song_chain[entry.pos] = entry[value_key]
+  end
+end
+
+local function undo(t)
+  local h = tracks[t].history
+  local entry = table.remove(h.undo)
+  if not entry then return end
+  apply_entry(t, entry, "before")
+  h.redo[#h.redo + 1] = entry
+  S.redraw_grid()
+end
+
+local function redo(t)
+  local h = tracks[t].history
+  local entry = table.remove(h.redo)
+  if not entry then return end
+  apply_entry(t, entry, "after")
+  h.undo[#h.undo + 1] = entry
+  S.redraw_grid()
 end
 
 -- slot 1 starts out holding each track's default state, so Session isn't
@@ -156,6 +242,7 @@ local function install_persistence()
             trk.pattern_quantize = d.pattern_quantize or 8
             trk.song_chain = d.song_chain or {}
             trk.song_enabled = d.song_enabled or false
+            trk.history = {undo = {}, redo = {}} -- entries refer to the data just replaced
             if trk.current_pattern and trk.patterns[trk.current_pattern] then
               apply_pattern(t, trk.patterns[trk.current_pattern])
             end
@@ -171,9 +258,15 @@ return {
   apply_pattern = apply_pattern,
   capture_pattern = capture_pattern,
   deep_copy = deep_copy,
+  copy_pattern = copy_pattern,
+  delete_pattern = delete_pattern,
   do_pattern_switch = do_pattern_switch,
-  duplicate_pattern_to = duplicate_pattern_to,
   init_slots = init_slots,
   install_persistence = install_persistence,
+  paste_pattern = paste_pattern,
   queue_pattern_switch = queue_pattern_switch,
+  redo = redo,
+  set_chain = set_chain,
+  slot_filled = slot_filled,
+  undo = undo,
 }

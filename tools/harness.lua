@@ -281,10 +281,16 @@ local function setup_features()
   for x = 1, 8 do tap(x, 1); advance(1.5) end
   tap(6, 9)
 
-  -- Session: copy a pattern (long press arms copy mode, next tap pastes)
+  -- Session: copy (up arrow held + tap), paste (down arrow held + tap), undo /
+  -- redo (left / right arrows), delete (hold a pattern, tap it) and cancel
   tap(5, 9)
-  try("key", fakepad.key, 1, 6, 1); advance(0.9); try("key", fakepad.key, 1, 6, 0)
-  tap(4, 6)
+  try("key", fakepad.key, 1, 9, 1); tap(1, 6); try("key", fakepad.key, 1, 9, 0)
+  try("key", fakepad.key, 2, 9, 1); tap(4, 6); tap(5, 6); try("key", fakepad.key, 2, 9, 0)
+  tap(3, 9); tap(3, 9); tap(4, 9)
+  try("key", fakepad.key, 4, 6, 1); advance(0.9); try("key", fakepad.key, 4, 6, 0); tap(4, 6)
+  try("key", fakepad.key, 5, 6, 1); advance(0.9); try("key", fakepad.key, 5, 6, 0); tap(7, 6)
+  tap(1, 2); tap(2, 6); try("key", fakepad.key, 3, 2, 1); advance(0.9); try("key", fakepad.key, 3, 2, 0)
+  tap(3, 9); tap(4, 9)
 
   -- pset save + load round trip
   try("pset", function()

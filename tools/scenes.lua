@@ -19,7 +19,7 @@ return function(S, consts, modulation)
     S.selected_step = nil
     S.last_slider = nil
     S.active_temp_page = nil
-    S.copy_mode_active = false
+    S.delete_armed, S.clipboard, S.arrow_held = nil, nil, nil
     S.chain_edit_pos = nil
     S.pulse_phase = true
     S.logo_on = false
@@ -100,6 +100,15 @@ return function(S, consts, modulation)
     s.pattern_quantize = 3
     s.song_chain = {[1] = 1, [2] = 2, [3] = 2, [4] = 5}
     s.song_enabled, s.song_pos = true, 2
+    S.clipboard = {snap = {}, track = 1, slot = 5} -- a copied pattern, pulsing white
+  end
+
+  -- a long-pressed pattern waiting to be deleted (tap it) or cancelled (tap elsewhere)
+  function scenes.session_delete()
+    scenes.session()
+    S.clipboard = nil
+    S.delete_armed = {track = 1, slot = 3}
+    T[1].pending_pattern = nil
   end
 
   -- screens ---------------------------------------------------------------

@@ -191,6 +191,7 @@ scene("user", "pad-user.svg", {
   top = PAGES,
 })
 
+local SESSION_TOP = with_pages({[1] = "copy", [2] = "paste", [3] = "undo", [4] = "redo"})
 scene("session", "pad-session.svg", {
   left = {
     [8] = "quantize: 1/1 → 1/128", [7] = "quantize: 1/4. → 1/64t",
@@ -198,7 +199,14 @@ scene("session", "pad-session.svg", {
     [2] = "song chain 1–8", [1] = "song chain 9–16",
   },
   right = TRACKS,
+  top = SESSION_TOP,
+  caption = "white pulse = the pattern in the clipboard · hold ▲ or ▼ and tap a pattern to copy or paste",
+})
+
+scene("session_delete", "pad-session-delete.svg", {
+  left = {[6] = "patterns 1–8", [5] = "patterns 9–16"},
   top = PAGES,
+  caption = "pattern 3 held: red pulse. Tap it to delete it, tap anywhere else to cancel",
 })
 
 scene("drums", "pad-overview.svg", {

@@ -225,7 +225,8 @@ end
 
 local function switch_page(new_page)
   S.page = new_page
-  S.copy_mode_active = false
+  S.delete_armed = nil
+  S.arrow_held = nil
   S.redraw_grid()
 end
 

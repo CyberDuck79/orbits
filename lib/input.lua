@@ -14,9 +14,10 @@ local view_root = theory.view_root
 local modulation = require 'orbits/lib/modulation'
 local USER_SLIDERS = modulation.USER_SLIDERS
 local patterns = require 'orbits/lib/patterns'
-local apply_pattern, capture_pattern = patterns.apply_pattern, patterns.capture_pattern
-local deep_copy, duplicate_pattern_to = patterns.deep_copy, patterns.duplicate_pattern_to
-local queue_pattern_switch = patterns.queue_pattern_switch
+local copy_pattern, delete_pattern = patterns.copy_pattern, patterns.delete_pattern
+local paste_pattern, queue_pattern_switch = patterns.paste_pattern, patterns.queue_pattern_switch
+local redo, undo = patterns.redo, patterns.undo
+local set_chain, slot_filled = patterns.set_chain, patterns.slot_filled
 local engine = require 'orbits/lib/engine'
 local toggle_play = engine.toggle_play
 local pages = require 'orbits/lib/pages'
@@ -25,6 +26,7 @@ local open_temp_page, switch_page = pages.open_temp_page, pages.switch_page
 
 local function select_track(t)
   S.selected_track = t
+  S.delete_armed = nil
   S.redraw_grid()
 end
 
@@ -172,28 +174,43 @@ local function handle_user_key(x, y, z)
   S.redraw_grid()
 end
 
+-- Session page. Patterns: tap = switch, hold = arm deletion (then tap the
+-- same pad to delete, anywhere else to cancel). With the up arrow held a
+-- tap copies the pattern, with the down arrow held it pastes. Chain: tap a
+-- position to arm it and a pattern to fill it, hold a position to clear it.
 local function handle_session_key(x, y, z)
-  -- copy mode is armed: any pattern tap now pastes the source here and
-  -- exits, regardless of which track is currently selected (so switching
-  -- tracks via the scene buttons first lets you copy across tracks)
-  if S.copy_mode_active and y >= 3 and y <= 6 and z == 1 then
-    local slot = (6 - y) * 8 + x
-    local trk = tracks[S.selected_track]
-    local source = tracks[S.copy_mode_source.track].patterns[S.copy_mode_source.slot]
-    trk.patterns[slot] = deep_copy(source)
-    if slot == trk.current_pattern then
-      apply_pattern(S.selected_track, trk.patterns[slot])
+  local in_patterns = y >= 3 and y <= 6
+  local slot = in_patterns and ((6 - y) * 8 + x) or nil
+
+  -- deletion armed: the next press either confirms (same pad) or cancels
+  if S.delete_armed then
+    if z == 1 then
+      local armed = S.delete_armed
+      S.delete_armed = nil
+      if slot and armed.track == S.selected_track and armed.slot == slot then
+        delete_pattern(S.selected_track, slot)
+      else
+        S.redraw_grid()
+      end
     end
-    S.copy_mode_active = false
-    S.copy_mode_source = nil
-    S.redraw_grid()
     return
   end
 
-  -- a chain step is armed: any pattern tap fills it and exits
-  if S.chain_edit_pos and y >= 3 and y <= 6 and z == 1 then
-    local slot = (6 - y) * 8 + x
-    tracks[S.selected_track].song_chain[S.chain_edit_pos] = slot
+  -- a Session arrow is held: tapping a pattern copies / pastes it
+  if S.arrow_held and slot then
+    if z == 1 then
+      if S.arrow_held == 1 then
+        copy_pattern(S.selected_track, slot)
+      else
+        paste_pattern(S.selected_track, slot)
+      end
+    end
+    return
+  end
+
+  -- a chain position is armed: any pattern tap fills it and exits
+  if S.chain_edit_pos and slot and z == 1 then
+    set_chain(S.selected_track, S.chain_edit_pos, slot)
     S.chain_edit_pos = nil
     S.redraw_grid()
     return
@@ -207,27 +224,18 @@ local function handle_session_key(x, y, z)
     return
   end
 
-  if y >= 3 and y <= 6 then
-    -- pattern slots: tap to switch (creating a blank pattern if empty).
-    -- long-press the *active* pattern's own pad to arm copy mode (a
-    -- self-duplicate would be a no-op anyway, so that gesture is free);
-    -- long-press any other pad duplicates the active pattern into it.
-    local slot = (6 - y) * 8 + x
+  if slot then
     if z == 1 then
       S.session_hold_pending = slot
       S.hold_metro.event = function()
         if S.session_hold_pending == slot then
-          if slot == tracks[S.selected_track].current_pattern then
-            -- sync the live edits into storage first -- otherwise the copy
-            -- would grab whatever was last saved, not what's playing now
-            tracks[S.selected_track].patterns[slot] = capture_pattern(S.selected_track)
-            S.copy_mode_active = true
-            S.copy_mode_source = {track = S.selected_track, slot = slot}
-          else
-            duplicate_pattern_to(S.selected_track, slot)
-          end
           S.session_hold_pending = nil
-          S.redraw_grid()
+          -- holding a filled pattern arms its deletion
+          if slot_filled(S.selected_track, slot) then
+            S.delete_armed = {track = S.selected_track, slot = slot}
+            S.pulse_phase = true
+            S.redraw_grid()
+          end
         end
       end
       S.hold_metro:start()
@@ -250,7 +258,7 @@ local function handle_session_key(x, y, z)
       S.chain_hold_pending = pos
       S.hold_metro.event = function()
         if S.chain_hold_pending == pos then
-          tracks[S.selected_track].song_chain[pos] = nil
+          set_chain(S.selected_track, pos, nil)
           S.chain_hold_pending = nil
           S.redraw_grid()
         end
@@ -269,6 +277,15 @@ local function handle_session_key(x, y, z)
 end
 
 local function handle_arrow(x, z)
+  if S.page == "session" then
+    -- up / down are held as modifiers (copy / paste); left / right undo / redo
+    if x == 1 or x == 2 then
+      S.arrow_held = (z == 1) and x or nil
+    elseif z == 1 then
+      if x == 3 then undo(S.selected_track) else redo(S.selected_track) end
+    end
+    return
+  end
   if z ~= 1 then return end
   local trk = tracks[S.selected_track]
   if S.page == "drums" then

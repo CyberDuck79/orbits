@@ -35,8 +35,9 @@ local S = {
   pulse_metro = nil,
   hold_pending = nil, -- step index currently being timed for long-press
   session_hold_pending = nil, -- pattern slot currently being timed for long-press (duplicate/copy-mode gesture)
-  copy_mode_active = false, -- armed by long-pressing the active pattern; next pattern tap pastes
-  copy_mode_source = nil, -- {track=, slot=} captured when copy mode was armed
+  delete_armed = nil, -- {track=, slot=}: a long-pressed pattern waiting to be tapped (delete) or cancelled
+  clipboard = nil, -- {snap=, track=, slot=}: the copied pattern, shared by every track
+  arrow_held = nil, -- 1 (copy) or 2 (paste) while that Session-page arrow is held
   chain_hold_pending = nil, -- chain step currently being timed for long-press (clear gesture)
   chain_edit_pos = nil, -- chain step armed for assignment; next pattern tap fills it
   mute_hold_pending = nil, -- track number currently being timed for shift+scene hold
@@ -94,6 +95,9 @@ function S.init_tracks()
       -- several can run at once even though only the selected one is shown
       -- on E2/K2/E3/K3 (see modulation.lua).
       random_states = {},
+
+      -- Session-page undo/redo: entries {kind="slot"|"chain", ..., before=, after=}
+      history = {undo = {}, redo = {}},
 
       patterns = {}, -- patterns[1..32] = a captured snapshot (see PATTERN_FIELDS), or nil if unused
       current_pattern = nil, -- slot currently loaded

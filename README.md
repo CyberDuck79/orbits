@@ -72,7 +72,7 @@ When the script loads, the screen plays a short animation: seven rings, one per 
 ```
 
 - **Top row, right half**: the four pages. The lit one is the current page.
-- **Top row, left half**: the arrows. They are lit on the Drums and Keys pages, where they do something (see below).
+- **Top row, left half**: the arrows. They are lit on the Drums, Keys and Session pages, where they do something (see below).
 - **Right column**: the 7 tracks (top = track 1). The selected track is amber, a muted one is red. Everything you edit applies to the selected track.
 - **Bottom of the right column** (the *Stop Solo Mute* button): **tap** to play / stop. **Hold** it to mute tracks and to change the tempo (see [Playing](#playing-tracks-mute-tempo)).
 - **Logo (top right corner)**: flashes on every quarter note while playing.
@@ -236,9 +236,25 @@ There is no *save* button: the active pattern always follows what you do, and sw
 
 ### Switching patterns
 
-- **Tap a pattern**: switches to it (an empty slot starts a blank pattern). While playing, the change waits for the quantize boundary and the pad blinks until then. When stopped, it is immediate.
-- **Hold a pattern**: copies the active pattern into that slot and switches to it. A quick way to start a variation.
-- **Hold the *active* pattern**: arms **copy mode** (its pad pulses white). The next pattern you tap gets a copy. You can change track first to copy across tracks.
+**Tap a pattern** to switch to it (an empty slot starts a blank pattern). While playing, the change waits for the quantize boundary and the pad blinks until then. When stopped, it is immediate.
+
+### Copy, paste, delete
+
+The four arrows of the top row work on patterns on this page.
+
+| Gesture | What it does |
+|---|---|
+| **Hold ▲**, tap a pattern | **Copies** it into the clipboard. Its pad pulses white as long as it is the clipboard's pattern |
+| **Hold ▼**, tap a pattern | **Pastes** the clipboard into it, replacing what it held. Pasting into the loaded pattern replaces the track's current state at once |
+| **Hold a pattern** | Arms its **deletion**: the pad pulses red. **Tap it** to delete it, **tap anywhere else** to cancel (that tap does nothing else). Any pattern with content can be deleted |
+| **◀** | **Undo** |
+| **▶** | **Redo** |
+
+![A pattern armed for deletion](docs/img/pad-session-delete.svg)
+
+- The clipboard is shared by the seven tracks: copy on one track, select another, and paste.
+- Deleting the loaded pattern empties it: it stays loaded as a blank pattern.
+- **Undo and redo** cover pasting, deleting and editing the song chain, with the last 16 actions of each track. Switching pattern and the settings of the other pages are not in the history. It starts empty when you load a pset.
 
 ### Song chain
 
@@ -246,6 +262,7 @@ The chain plays patterns in order, on its own for each track.
 
 - **Tap a chain position** to arm it (it blinks white), then **tap a pattern** to put it there.
 - **Hold a chain position** to clear it.
+- Both can be undone with ◀.
 - **K2 `song`** turns the chain on. It then advances through the filled positions at each quantize boundary, skipping empty ones. The playing position is bright yellow.
 
 ## Playing: tracks, mute, tempo
@@ -297,8 +314,10 @@ The default division is 1/16, the default pattern is 4 pulses on 8 steps, the de
 | Hold play/mute, hold a track | Momentary mute |
 | Hold play/mute, turn E2 | Tempo |
 | Tap a pattern | Switch (at the quantize boundary) |
-| Hold a pattern | Copy the active pattern there |
-| Hold the active pattern, tap another | Copy mode |
+| Hold ▲, tap a pattern | Copy it (Session page) |
+| Hold ▼, tap a pattern | Paste the copy there |
+| Hold a pattern, tap it again | Delete it (tap elsewhere to cancel) |
+| ◀ / ▶ on Session | Undo / redo |
 | Tap a chain position, tap a pattern | Fill that position |
 | Hold a chain position | Clear it |
 
