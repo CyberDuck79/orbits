@@ -89,24 +89,6 @@ The screen never repeats what the Launchpad already shows. It carries what the p
 
 ![Drums page, default sub-page (velocity)](docs/img/screen-drums.png)
 
-### Colours
-
-One hue per kind of parameter, the same on the pads and on the User page:
-
-| Colour | Meaning |
-|---|---|
-| Amber | A generated (Euclidean) step. Brighter: accented step, or the step being played |
-| Light blue | A step you added by hand |
-| Cyan | The selected division or repeat time (close to light blue, but they never share a row) |
-| Blue | The selected scale |
-| Red | The selected repeat count; repeat ramp and pace |
-| Violet | The selected groove; groove amount and shape |
-| Orange | The selected root note |
-| Green | The selected arp style; a pattern slot (bright = loaded) |
-| Yellow-green | The selected phrase type |
-| Yellow | The song chain (bright = playing) |
-| Dim grey | Inactive |
-
 ## Drums page
 
 ![Drums page](docs/img/pad-drums.svg)
