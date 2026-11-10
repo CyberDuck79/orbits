@@ -1,5 +1,7 @@
 # orbits
 
+![orbits](docs/img/splash.png)
+
 A 7-track **Euclidean sequencer** for [norns](https://monome.org/docs/norns/), played from a **Novation Launchpad Mini MK3**.
 
 Every track has its own length, density, rotation and clock division, so tracks drift against each other (polymeter and polyrhythm are free). On top of the Euclidean pattern you get hand-placed steps, accents, per-step probability and micro-timing, a note repeater, an accent groove, a scale-aware keyboard with arpeggiator and melodic phrases, random modulation of eight parameters, 32 patterns per track and a song chain.

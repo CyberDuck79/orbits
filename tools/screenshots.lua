@@ -25,4 +25,7 @@ for _, name in ipairs(list) do
   screen.export_screenshot("shot_" .. name)
   if name == "screen_disconnected" then S.pad.connected = true end
 end
+-- the end of the start-up animation, used as the logo at the top of the README
+splash.draw(3.6)
+screen.export_screenshot("shot_splash")
 print("orbits screenshots done")
