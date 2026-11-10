@@ -102,6 +102,7 @@ return function(S, consts, modulation)
     s.song_enabled, s.song_pos = true, 2
     S.clipboard = {snap = {}, track = 1, slot = 5} -- the copied pattern, shown while the paste arrow is held
     S.arrow_held = 2
+    S.pulse_phase = false -- pulsing pads (queued pattern, pasted pattern) are drawn in their dim half
   end
 
   -- a long-pressed pattern waiting to be deleted (tap it) or cancelled (tap elsewhere)
@@ -166,6 +167,7 @@ return function(S, consts, modulation)
     s.song_chain = {[1] = 1, [2] = 2, [3] = 2, [4] = 5, [9] = 3, [10] = 3}
     s.song_enabled, s.song_pos = true, 2
     S.chain_edit_pos = 9
+    S.pulse_phase = false -- the armed position is shown in the dim half of its blink
   end
 
   function scenes.screen_tempo() reset(); S.active_temp_page = "tempo" end

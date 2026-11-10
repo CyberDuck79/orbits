@@ -222,6 +222,8 @@ The modulation follows a sequence of 16 random values that loops, so it sounds l
 
 ![Session page](docs/img/pad-session.svg)
 
+In this picture pattern 2 (bright green) is playing and pattern 3 (dark green) is queued: its pad pulses until the change happens. The white pad is the copied pattern shown while the paste arrow is held; it pulses too.
+
 Each track holds **32 patterns**. A pattern stores everything about the track's rhythm and melody (pattern, division, repeats, groove, notes, scale, arp, phrase, modulation settings, velocity). It does **not** store the track's voice or mute.
 
 There is no *save* button: the active pattern always follows what you do, and switching saves it.
@@ -240,6 +242,8 @@ There is no *save* button: the active pattern always follows what you do, and sw
 - **chain**: the whole song chain, as two rows of eight pattern numbers in the same order as its pads (positions 1–8 on top). The position being played is bright, empty positions are a dim dash. An armed position blinks, like its pad, and the `song` value below then reads `position -> pattern` (for example `9 -> 3`, or `9 -> --` when the position is empty).
 
 ![Chain sub-page](docs/img/screen-session-chain.png)
+
+Position 2 (bright) is the one playing; position 9 (dimmer) is armed and blinks.
 
 ### Switching patterns
 
