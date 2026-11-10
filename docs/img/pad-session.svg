@@ -110,5 +110,5 @@
 <text x="522" y="32" fill="#9a9aa6" font-size="11" text-anchor="middle">Drums</text>
 <text x="572" y="32" fill="#9a9aa6" font-size="11" text-anchor="middle">Keys</text>
 <text x="622" y="32" fill="#9a9aa6" font-size="11" text-anchor="middle">User</text>
-<text x="425" y="538" fill="#9a9aa6" font-size="12" text-anchor="middle">white pulse = the pattern in the clipboard · hold ▲ or ▼ and tap a pattern to copy or paste</text>
+<text x="425" y="538" fill="#9a9aa6" font-size="12" text-anchor="middle">paste arrow held: the pattern in the clipboard pulses white (pattern 5)</text>
 </svg>

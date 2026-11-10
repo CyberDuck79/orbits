@@ -281,6 +281,8 @@ local function handle_arrow(x, z)
     -- up / down are held as modifiers (copy / paste); left / right undo / redo
     if x == 1 or x == 2 then
       S.arrow_held = (z == 1) and x or nil
+      S.pulse_phase = true
+      S.redraw_grid() -- shows / hides the clipboard marker
     elseif z == 1 then
       if x == 3 then undo(S.selected_track) else redo(S.selected_track) end
     end
@@ -388,11 +390,16 @@ end
 local function create_timers()
   S.hold_metro = metro.init(function() end, 0.45, 1)
   S.mute_hold_metro = metro.init(function() end, 0.3, 1)
+  S.flash_metro = metro.init(function()
+    S.copy_flash = nil
+    S.redraw_grid()
+  end, 0.35, 1)
 end
 
 local function free_timers()
   if S.hold_metro then metro.free(S.hold_metro.id) end
   if S.mute_hold_metro then metro.free(S.mute_hold_metro.id) end
+  if S.flash_metro then metro.free(S.flash_metro.id) end
 end
 
 return {

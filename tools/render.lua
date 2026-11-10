@@ -200,7 +200,7 @@ scene("session", "pad-session.svg", {
   },
   right = TRACKS,
   top = SESSION_TOP,
-  caption = "white pulse = the pattern in the clipboard · hold ▲ or ▼ and tap a pattern to copy or paste",
+  caption = "paste arrow held: the pattern in the clipboard pulses white (pattern 5)",
 })
 
 scene("session_delete", "pad-session-delete.svg", {

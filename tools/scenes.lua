@@ -100,13 +100,14 @@ return function(S, consts, modulation)
     s.pattern_quantize = 3
     s.song_chain = {[1] = 1, [2] = 2, [3] = 2, [4] = 5}
     s.song_enabled, s.song_pos = true, 2
-    S.clipboard = {snap = {}, track = 1, slot = 5} -- a copied pattern, pulsing white
+    S.clipboard = {snap = {}, track = 1, slot = 5} -- the copied pattern, shown while the paste arrow is held
+    S.arrow_held = 2
   end
 
   -- a long-pressed pattern waiting to be deleted (tap it) or cancelled (tap elsewhere)
   function scenes.session_delete()
     scenes.session()
-    S.clipboard = nil
+    S.clipboard, S.arrow_held = nil, nil
     S.delete_armed = {track = 1, slot = 3}
     T[1].pending_pattern = nil
   end

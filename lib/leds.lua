@@ -233,8 +233,11 @@ local function draw_session_page()
         -- armed for deletion: red, pulsing (tap it again to delete)
         local c = scale_color(RED, S.pulse_phase and 1.0 or 0.35)
         S.pad:led_rgb(x, y, c[1], c[2], c[3])
-      elseif source and source.track == S.selected_track and source.slot == slot then
-        -- the pattern in the clipboard, pulsing white
+      elseif S.copy_flash and S.copy_flash.track == S.selected_track and S.copy_flash.slot == slot then
+        -- just copied: a short white flash
+        S.pad:led_rgb(x, y, 127, 127, 127)
+      elseif S.arrow_held == 2 and source and source.track == S.selected_track and source.slot == slot then
+        -- paste arrow held: the pattern that would be pasted, pulsing white
         local c = scale_color({127, 127, 127}, S.pulse_phase and 1.0 or 0.35)
         S.pad:led_rgb(x, y, c[1], c[2], c[3])
       elseif slot == trk.pending_pattern then
@@ -345,7 +348,7 @@ local function start_blink()
     -- wrong until it changes. Resend everything every 2 s to heal that.
     ticks = ticks + 1
     if ticks % 8 == 0 and S.pad then S.pad:refresh(true) end
-    local needs_redraw = S.selected_step ~= nil or S.delete_armed ~= nil or S.clipboard ~= nil or S.chain_edit_pos ~= nil
+    local needs_redraw = S.selected_step ~= nil or S.delete_armed ~= nil or (S.clipboard ~= nil and S.arrow_held == 2) or S.chain_edit_pos ~= nil
       or (S.page == "user" and S.last_slider ~= nil)
     if not needs_redraw then
       for t = 1, NUM_TRACKS do

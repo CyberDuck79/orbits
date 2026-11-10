@@ -136,6 +136,9 @@ local function copy_pattern(t, slot)
   local snap = slot_content(t, slot)
   if not snap then return end
   S.clipboard = {snap = snap, track = t, slot = slot}
+  -- a short flash on the pad confirms the copy
+  S.copy_flash = {track = t, slot = slot}
+  if S.flash_metro then S.flash_metro:start() end
   S.redraw_grid()
 end
 

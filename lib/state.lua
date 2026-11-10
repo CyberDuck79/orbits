@@ -37,6 +37,8 @@ local S = {
   session_hold_pending = nil, -- pattern slot currently being timed for long-press (duplicate/copy-mode gesture)
   delete_armed = nil, -- {track=, slot=}: a long-pressed pattern waiting to be tapped (delete) or cancelled
   clipboard = nil, -- {snap=, track=, slot=}: the copied pattern, shared by every track
+  copy_flash = nil, -- {track=, slot=}: the pattern just copied, flashing briefly to confirm it
+  flash_metro = nil, -- one-shot timer that ends the flash
   arrow_held = nil, -- 1 (copy) or 2 (paste) while that Session-page arrow is held
   chain_hold_pending = nil, -- chain step currently being timed for long-press (clear gesture)
   chain_edit_pos = nil, -- chain step armed for assignment; next pattern tap fills it

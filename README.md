@@ -244,8 +244,8 @@ The four arrows of the top row work on patterns on this page.
 
 | Gesture | What it does |
 |---|---|
-| **Hold ▲**, tap a pattern | **Copies** it into the clipboard. Its pad pulses white as long as it is the clipboard's pattern |
-| **Hold ▼**, tap a pattern | **Pastes** the clipboard into it, replacing what it held. Pasting into the loaded pattern replaces the track's current state at once |
+| **Hold ▲**, tap a pattern | **Copies** it into the clipboard. Its pad flashes white briefly to confirm |
+| **Hold ▼**, tap a pattern | **Pastes** the clipboard into it, replacing what it held. While ▼ is held, the pattern in the clipboard pulses white, so you can see what you are about to paste. Pasting into the loaded pattern replaces the track's current state at once |
 | **Hold a pattern** | Arms its **deletion**: the pad pulses red. **Tap it** to delete it, **tap anywhere else** to cancel (that tap does nothing else). Any pattern with content can be deleted |
 | **◀** | **Undo** |
 | **▶** | **Redo** |
