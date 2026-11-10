@@ -240,6 +240,10 @@ local function draw_session_page()
         -- paste arrow held: the pattern that would be pasted, pulsing white
         local c = scale_color({127, 127, 127}, S.pulse_phase and 1.0 or 0.35)
         S.pad:led_rgb(x, y, c[1], c[2], c[3])
+      elseif S.chain_edit_pos and trk.song_chain[S.chain_edit_pos] == slot then
+        -- a chain position is armed: show the pattern it already holds, pulsing white
+        local c = scale_color({127, 127, 127}, S.pulse_phase and 1.0 or 0.35)
+        S.pad:led_rgb(x, y, c[1], c[2], c[3])
       elseif slot == trk.pending_pattern then
         local c = scale_color(PATTERN_ACTIVE, S.pulse_phase and 1.0 or 0.35)
         S.pad:led_rgb(x, y, c[1], c[2], c[3])

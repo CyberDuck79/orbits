@@ -260,10 +260,10 @@ The four arrows of the top row work on patterns on this page.
 
 The chain plays patterns in order, on its own for each track.
 
-- **Tap a chain position** to arm it (it blinks white), then **tap a pattern** to put it there.
+- **Tap a chain position** to arm it (it blinks white), then **tap a pattern** to put it there. If the position already holds a pattern, that pattern's pad pulses white while the position is armed, so you can see what is there.
 - **Hold a chain position** to clear it.
 - Both can be undone with ◀.
-- **K2 `song`** turns the chain on. It then advances through the filled positions at each quantize boundary, skipping empty ones. The playing position is bright yellow.
+- **K2 `song`** turns the chain on. It then advances through the filled positions at each quantize boundary, skipping empty ones, and goes round the 16 positions in a loop. Gaps are fine, and so is filling only the second row; a pattern you want to last longer goes on several positions. An empty chain does nothing. The playing position is bright yellow.
 
 ## Playing: tracks, mute, tempo
 
