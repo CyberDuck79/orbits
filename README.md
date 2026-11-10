@@ -38,7 +38,7 @@ Install orbits itself by cloning this repository into the norns' script folder, 
 
 ```
 cd ~/dust/code
-git clone <this repository> orbits
+git clone https://github.com/CyberDuck79/orbits.git orbits
 ```
 
 ## Quick start
