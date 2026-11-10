@@ -154,6 +154,8 @@ The screen does not repeat what the grid already shows. Each grid page has **sub
  e3 = …, k3 = …}
 ```
 
+The Session page's **chain** sub-page is declared `{name = "chain", chain = true}` with no slots: `display.lua` draws the song chain in the upper half instead of the E2/K2/E3/K3 slots (the lower half, the values of the pad rows, is common to all sub-pages).
+
 The Drums page has one exception: its **step** sub-page is not in the `subpages.drums` list E1 cycles through. It is a separate `step_page` that `current_subpage_def()` returns whenever `step_locked()` is true (Drums page and `S.selected_step ~= nil`), so it exists exactly as long as a step is selected, and E1 is locked meanwhile (`controls.lua`, `display.lua` draws a blinking marker). Touching the repeats or groove pads in `input.lua` calls `pages.select_subpage()`, which deselects the step and jumps to that sub-page.
 
 `controls.lua` knows no page: it calls the slot of the current sub-page (`current_subpage_def()`) if `slot_ready` (present and `available()` true). `display.lua` draws the same slots, so what you see is what you control. **Temporary pages** (`temp_pages`, currently only "tempo") follow the same contract and replace the sub-page while their button is held.

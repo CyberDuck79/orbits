@@ -184,7 +184,7 @@ local subpages = {
     },
   },
   session = {
-    {name = "session",
+    {name = "song",
       k2 = {
         label = function() return "song" end,
         state = function() return tracks[S.selected_track].song_enabled end,
@@ -194,6 +194,9 @@ local subpages = {
         end,
       },
     },
+    -- no slots: the screen's upper half shows the whole song chain instead
+    -- (display.lua), the way the Drums sub-pages swap that half
+    {name = "chain", chain = true},
   },
 }
 

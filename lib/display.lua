@@ -80,6 +80,29 @@ local function param_idx(x, y, index, label, value, span, total)
   screen.text(value)
 end
 
+-- the song chain as two rows of 8 pattern numbers, in the same order as its
+-- pads (positions 1-8 on top). The playing position is bright, an armed one
+-- blinks with its pad, empty positions are a dim dash.
+local function draw_chain()
+  local trk = tracks[S.selected_track]
+  for pos = 1, 16 do
+    local x = ((pos - 1) % 8) * 16 + 2
+    local y = pos <= 8 and 19 or 28
+    local slot = trk.song_chain[pos]
+    local level
+    if pos == S.chain_edit_pos then
+      level = S.pulse_phase and 15 or 4
+    elseif trk.song_enabled and pos == trk.song_pos then
+      level = 15
+    else
+      level = slot and 8 or 3
+    end
+    screen.level(level)
+    screen.move(x, y)
+    screen.text(slot and tostring(slot) or "-")
+  end
+end
+
 local function redraw()
   -- the clocks and the pad call this constantly; while a system menu is open
   -- the screen belongs to it, and drawing here would make the two flicker
@@ -154,74 +177,78 @@ local function redraw()
   end
 
   -- two columns, matching the physical layout (E2 sits above K2, E3 above K3)
-  if slot_ready(sp.e2) then
-    screen.level(15)
-    draw_round_dot(0, 15)
-    screen.move(7, 19)
-    screen.level(5)
-    screen.text(sp.e2.label())
-    screen.level(15)
-    screen.text(" " .. sp.e2.value())
+  if sp.chain then
+    draw_chain() -- this sub-page has no slots
   else
-    screen.level(5)
-    draw_round_dot(0, 15)
-    screen.move(7, 19)
-    screen.text("--")
-  end
-  if slot_ready(sp.k2) then
-    screen.level(15)
-    screen.line_width(1)
-    if sp.k2.state() then
-      screen.rect(0, 24, 4, 4)
-      screen.fill()
+    if slot_ready(sp.e2) then
+      screen.level(15)
+      draw_round_dot(0, 15)
+      screen.move(7, 19)
+      screen.level(5)
+      screen.text(sp.e2.label())
+      screen.level(15)
+      screen.text(" " .. sp.e2.value())
     else
+      screen.level(5)
+      draw_round_dot(0, 15)
+      screen.move(7, 19)
+      screen.text("--")
+    end
+    if slot_ready(sp.k2) then
+      screen.level(15)
+      screen.line_width(1)
+      if sp.k2.state() then
+        screen.rect(0, 24, 4, 4)
+        screen.fill()
+      else
+        screen.rect(0.5, 24.5, 3, 3)
+        screen.stroke()
+      end
+      screen.move(7, 28)
+      screen.text(sp.k2.label())
+    else
+      screen.level(5)
+      screen.line_width(1)
       screen.rect(0.5, 24.5, 3, 3)
       screen.stroke()
+      screen.move(7, 28)
+      screen.text("--")
     end
-    screen.move(7, 28)
-    screen.text(sp.k2.label())
-  else
-    screen.level(5)
-    screen.line_width(1)
-    screen.rect(0.5, 24.5, 3, 3)
-    screen.stroke()
-    screen.move(7, 28)
-    screen.text("--")
-  end
 
-  if slot_ready(sp.e3) then
-    screen.level(15)
-    draw_round_dot(64, 15)
-    screen.move(71, 19)
-    screen.level(5)
-    screen.text(sp.e3.label())
-    screen.level(15)
-    screen.text(" " .. sp.e3.value())
-  else
-    screen.level(5)
-    draw_round_dot(64, 15)
-    screen.move(71, 19)
-    screen.text("--")
-  end
-  if slot_ready(sp.k3) then
-    screen.level(15)
-    screen.line_width(1)
-    if sp.k3.state() then
-      screen.rect(64, 24, 4, 4)
-      screen.fill()
+    if slot_ready(sp.e3) then
+      screen.level(15)
+      draw_round_dot(64, 15)
+      screen.move(71, 19)
+      screen.level(5)
+      screen.text(sp.e3.label())
+      screen.level(15)
+      screen.text(" " .. sp.e3.value())
     else
+      screen.level(5)
+      draw_round_dot(64, 15)
+      screen.move(71, 19)
+      screen.text("--")
+    end
+    if slot_ready(sp.k3) then
+      screen.level(15)
+      screen.line_width(1)
+      if sp.k3.state() then
+        screen.rect(64, 24, 4, 4)
+        screen.fill()
+      else
+        screen.rect(64.5, 24.5, 3, 3)
+        screen.stroke()
+      end
+      screen.move(71, 28)
+      screen.text(sp.k3.label())
+    else
+      screen.level(5)
+      screen.line_width(1)
       screen.rect(64.5, 24.5, 3, 3)
       screen.stroke()
+      screen.move(71, 28)
+      screen.text("--")
     end
-    screen.move(71, 28)
-    screen.text(sp.k3.label())
-  else
-    screen.level(5)
-    screen.line_width(1)
-    screen.rect(64.5, 24.5, 3, 3)
-    screen.stroke()
-    screen.move(71, 28)
-    screen.text("--")
   end
   screen.level(15)
 
@@ -255,6 +282,10 @@ local function redraw()
     local pat_value = trk.pending_pattern and ("-> " .. trk.pending_pattern)
       or (trk.current_pattern and tostring(trk.current_pattern) or "--")
     local song_value = trk.song_enabled and tostring(math.max(trk.song_pos, 1)) or "--"
+    if S.chain_edit_pos then
+      -- a chain position is armed: say which pattern it holds
+      song_value = S.chain_edit_pos .. " -> " .. (trk.song_chain[S.chain_edit_pos] or "--")
+    end
     param_idx(0, 48, 1, "quant", div_label(ALL_DIVISIONS[trk.pattern_quantize]), 2)
     param_idx(0, 60, 2, "pat", pat_value, 2)
     param_idx(64, 48, 3, "song", song_value, 2)

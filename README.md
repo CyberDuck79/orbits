@@ -234,6 +234,13 @@ There is no *save* button: the active pattern always follows what you do, and sw
 
 ![Session screen](docs/img/screen-session.png)
 
+**E1** switches between the two sub-pages of the Session page, **song** and **chain**. As on the Drums page, the lower half of the screen never changes: it shows the values of the pad rows (`quant`, `pat`, `song`). The upper half is what the sub-pages swap.
+
+- **song**: **K2 `song`** turns the song chain on.
+- **chain**: the whole song chain, as two rows of eight pattern numbers in the same order as its pads (positions 1–8 on top). The position being played is bright, empty positions are a dim dash. An armed position blinks, like its pad, and the `song` value below then reads `position -> pattern` (for example `9 -> 3`, or `9 -> --` when the position is empty).
+
+![Chain sub-page](docs/img/screen-session-chain.png)
+
 ### Switching patterns
 
 **Tap a pattern** to switch to it (an empty slot starts a blank pattern). While playing, the change waits for the quantize boundary and the pad blinks until then. When stopped, it is immediate.

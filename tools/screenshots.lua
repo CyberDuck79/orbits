@@ -11,7 +11,7 @@ local scenes = dofile("/tmp/scenes.lua")(S, consts, modulation)
 local list = {
   "screen_drums", "screen_drums_step", "screen_drums_repeat",
   "screen_drums_groove", "screen_keys", "screen_user", "screen_user_empty",
-  "screen_session", "screen_tempo", "screen_disconnected",
+  "screen_session", "screen_session_chain", "screen_tempo", "screen_disconnected",
 }
 
 for _, name in ipairs(list) do

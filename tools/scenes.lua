@@ -157,6 +157,17 @@ return function(S, consts, modulation)
     T[1].song_enabled, T[1].song_pos = true, 2
   end
 
+  -- the chain sub-page, with the position 9 armed (blinking) and the song playing position 2
+  function scenes.screen_session_chain()
+    reset()
+    S.page = "session"
+    S.current_subpage.session = 2
+    local s = T[1]
+    s.song_chain = {[1] = 1, [2] = 2, [3] = 2, [4] = 5, [9] = 3, [10] = 3}
+    s.song_enabled, s.song_pos = true, 2
+    S.chain_edit_pos = 9
+  end
+
   function scenes.screen_tempo() reset(); S.active_temp_page = "tempo" end
 
   scenes.reset = reset
