@@ -167,6 +167,7 @@ Redraw guards: `display.redraw()` does nothing while a norns system menu is open
 - `deploy.sh`: copies the script to the norns (`ssh norns`).
 - `check.sh <git-ref> [seed]`: checks that a refactor changes nothing. It replays a long scripted session (pads, encoders, keys, virtual clock, stubbed norns APIs) on the old version and on the current folder, then compares the LEDs, screen calls and emitted notes **byte for byte**.
 - `render.sh` / `render.lua`: regenerate the README pictures (`docs/img/*.svg`) from the real code. Re-run after changing anything visible (colours, layouts, screen).
+- `stress.sh` / `stress.lua`: the stress test, the "grand final" before a release. It checks the pattern-change timing of 7 tracks against a reference simulation, runs random events on every page with invariants (bounded values, balanced note on/off, valid LED bytes, no NaN), compares undo/redo with a model, and checks that a replay and the micro-timing are exact. It relies on one test seam in `engine.lua`, `S.on_change`, called with a description of every pattern change. Run `sh tools/stress.sh 1 2 3` after changing the engine or the patterns.
 - `behaviour.sh` / `behaviour.lua`: ok/FAIL checks of the pattern-change rules (quantize, song length, chain), on the harness's virtual clock. Run it after touching `engine.lua` or `patterns.lua`.
 - `harness.lua`: the test driver (deterministic randomness per seed, `COVER=1` for line coverage).
 

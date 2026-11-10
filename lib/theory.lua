@@ -34,12 +34,13 @@ local function toggle_note(t, note)
   end
 end
 
--- moves a note to the nearest in-scale note (ties favour the lower note)
+-- moves a note to the nearest in-scale note (ties favour the lower note),
+-- staying within the MIDI range 0..127
 local function nearest_in_scale_note(t, note)
   if note_in_scale(t, note) then return note end
   for d = 1, 12 do
-    if note_in_scale(t, note - d) then return note - d end
-    if note_in_scale(t, note + d) then return note + d end
+    if note - d >= 0 and note_in_scale(t, note - d) then return note - d end
+    if note + d <= 127 and note_in_scale(t, note + d) then return note + d end
   end
   return note
 end

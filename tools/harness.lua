@@ -43,7 +43,7 @@ if os.getenv("COVER") then
 end
 
 -- ---------------------------------------------------------------- time ----
-local BPM = 120
+local BPM = tonumber(os.getenv("BPM")) or 120
 local now = 0 -- seconds of virtual time
 local function beats() return now * BPM / 60 end
 
@@ -100,6 +100,7 @@ clock = {
   cancel = function() end,
   get_beats = beats,
   get_tempo = function() return BPM end,
+  get_beat_sec = function() return 60 / BPM end,
 }
 
 -- --------------------------------------------------------------- metro ----

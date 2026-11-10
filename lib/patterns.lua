@@ -274,6 +274,7 @@ return {
   copy_pattern = copy_pattern,
   delete_pattern = delete_pattern,
   do_pattern_switch = do_pattern_switch,
+  fresh_pattern_snapshot = fresh_pattern_snapshot,
   init_slots = init_slots,
   install_persistence = install_persistence,
   paste_pattern = paste_pattern,

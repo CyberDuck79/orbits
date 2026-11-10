@@ -44,6 +44,8 @@ local S = {
   chain_edit_pos = nil, -- chain step armed for assignment; next pattern tap fills it
   mute_hold_pending = nil, -- track number currently being timed for shift+scene hold
 
+  on_change = nil, -- test seam: called by the engine with a description of each pattern change (tools/stress.lua)
+
   -- hooks: filled in by leds.lua / display.lua when they load
   redraw_grid = function() end,
   redraw_screen = function() end,

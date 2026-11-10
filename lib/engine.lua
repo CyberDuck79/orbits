@@ -45,13 +45,14 @@ local function trigger_repeats(t, notes_to_play, base_vel)
   if trk.repeats <= 0 then return end
   local player = params:lookup_param("voice_t" .. t):get_player()
   local epoch = S.play_epoch
+  local count = trk.repeats -- fixed for this series: the repeats fader may move meanwhile
   clock.run(function()
-    for i = 1, trk.repeats do
-      local progress = (i - 1) / math.max(trk.repeats - 1, 1)
+    for i = 1, count do
+      local progress = (i - 1) / math.max(count - 1, 1)
       local pace_factor = math.max(1 - (trk.pace / 63) * progress * 0.5, 0.1)
       clock.sync(trk.repeat_time * pace_factor)
       if epoch ~= S.play_epoch then return end -- stopped (or restarted) meanwhile: drop the rest of the series
-      local vel = util.clamp(base_vel + trk.ramp * (i / trk.repeats), 0, 127)
+      local vel = util.clamp(base_vel + trk.ramp * (i / count), 0, 127)
       for _, note in ipairs(notes_to_play) do
         player:note_on(note, vel / 127)
       end
@@ -145,6 +146,12 @@ end
 -- chain (empty positions are skipped), or the pattern that was tapped
 local function change_pattern(t)
   local trk = tracks[t]
+  -- test seam (tools/stress.lua): when S.on_change is set, describe the change
+  local info = S.on_change and {
+    t = t, song = trk.song_enabled, value = change_value(trk), groove_pos = S.groove_pos,
+    step = trk.step, length = trk.length, song_pos = trk.song_pos,
+    pattern = trk.current_pattern, pending = trk.pending_pattern,
+  } or nil
   if trk.song_enabled then
     local start = trk.song_pos
     for _ = 1, 16 do
@@ -157,6 +164,10 @@ local function change_pattern(t)
     end
   elseif trk.pending_pattern then
     do_pattern_switch(t, trk.pending_pattern)
+  end
+  if info then
+    info.song_pos_after, info.pattern_after, info.step_after = trk.song_pos, trk.current_pattern, trk.step
+    S.on_change(info)
   end
   if t == S.selected_track then S.redraw_grid() end
 end
@@ -183,8 +194,13 @@ local function start_track_sequencer(t)
           if step_active(t, pos) and math.random(100) <= step_probability(t, pos) then
             local micro = step_microtiming(t, pos)
             if micro > 0 then
+              -- delayed by a fixed fraction of the division (clock.sync would snap
+              -- the delay to a grid of that size: the delay would vary from step
+              -- to step); a stop in the meantime cancels it
+              local epoch = S.play_epoch
               clock.run(function()
-                clock.sync(trk.division * (micro / 100))
+                clock.sleep(trk.division * (micro / 100) * clock.get_beat_sec())
+                if epoch ~= S.play_epoch then return end
                 trigger_track(t, pos)
               end)
             else
